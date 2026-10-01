@@ -34,7 +34,7 @@
 </head>
 <body class="bg-[#080c14] text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between">
 
-  <!-- MODAL DE LOGIN COM OLHINHO DE MOSTRAR SENHA -->
+  <!-- MODAL DE LOGIN COM BOTAO VISUALIZAR PALAVRA-PASSE -->
   <div id="login-modal" class="fixed inset-0 z-[9999] bg-[#080c14]/95 backdrop-blur-md flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl space-y-6">
       <div class="text-center space-y-2">
@@ -44,12 +44,12 @@
           class="h-16 w-auto mx-auto rounded-xl border border-slate-700 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
         />
         <h2 class="text-2xl font-black text-white tracking-wide">Área do Cliente</h2>
-        <p class="text-xs text-slate-400">Digite sua senha de acesso para visualizar sua frota.</p>
+        <p class="text-xs text-slate-400">Digite a sua palavra-passe de acesso para visualizar a sua frota.</p>
       </div>
 
       <form onsubmit="realizarLogin(event)" class="space-y-4">
         <div>
-          <label class="text-xs font-mono text-slate-400 block mb-1">Senha de Acesso</label>
+          <label class="text-xs font-mono text-slate-400 block mb-1">Palavra-passe de Acesso</label>
           <div class="relative">
             <input 
               type="password" 
@@ -62,14 +62,14 @@
               type="button" 
               onclick="toggleSenhaVisibility()" 
               class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-400 transition"
-              title="Mostrar/Ocultar Senha"
+              title="Mostrar/Ocultar Palavra-passe"
             >
               <i id="eye-icon" class="fa-solid fa-eye"></i>
             </button>
           </div>
         </div>
         
-        <p id="login-error" class="text-xs text-red-400 hidden text-center font-mono">Senha incorreta ou cliente inativo.</p>
+        <p id="login-error" class="text-xs text-red-400 hidden text-center font-mono">Palavra-passe incorreta ou cliente inativo.</p>
 
         <button 
           type="submit" 
@@ -81,7 +81,7 @@
     </div>
   </div>
 
-  <!-- CONTEÚDO PRINCIPAL -->
+  <!-- CONTEÚDO PRINCIPAL DA LANDING PAGE -->
   <div id="app-content" class="hidden">
     <header class="border-b border-slate-800/80 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 h-24 flex items-center justify-between gap-4">
@@ -134,7 +134,7 @@
             <i class="fa-solid fa-location-dot text-emerald-400"></i> Localizações Detectadas
           </h3>
           <span id="total-registros-badge" class="px-3.5 py-1.5 bg-slate-950 text-emerald-400 font-mono text-xs rounded-full border border-slate-800">
-            0 registros
+            0 registos
           </span>
         </div>
 
@@ -186,6 +186,7 @@
       const senhaInput = String(document.getElementById("input-password").value).trim().toLowerCase();
       const erroEl = document.getElementById("login-error");
 
+      // Compara a palavra-passe ignorando espaços extras e maiúsculas/minúsculas
       const dispositivosDoCliente = todosDispositivos.filter(d => 
         d.cliente_senha && String(d.cliente_senha).trim().toLowerCase() === senhaInput
       );
@@ -267,7 +268,7 @@
         });
       });
 
-      document.getElementById("total-registros-badge").innerText = `${totalExibidos} registros`;
+      document.getElementById("total-registros-badge").innerText = `${totalExibidos} registos`;
 
       if (todosPontosBounds.length > 0) {
         map.fitBounds(todosPontosBounds, { padding: [30, 30] });
