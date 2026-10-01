@@ -34,7 +34,7 @@
 </head>
 <body class="bg-[#080c14] text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between">
 
-  <!-- MODAL DE LOGIN POR CLIENTE -->
+  <!-- MODAL DE LOGIN COM OLHINHO -->
   <div id="login-modal" class="fixed inset-0 z-[9999] bg-[#080c14]/95 backdrop-blur-md flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl space-y-6">
       <div class="text-center space-y-2">
@@ -50,13 +50,23 @@
       <form onsubmit="realizarLogin(event)" class="space-y-4">
         <div>
           <label class="text-xs font-mono text-slate-400 block mb-1">Senha de Acesso</label>
-          <input 
-            type="password" 
-            id="input-password" 
-            placeholder="••••••••" 
-            required
-            class="w-full bg-slate-950 border border-slate-700 text-emerald-400 font-mono text-sm rounded-xl px-4 py-3 outline-none focus:border-emerald-500"
-          />
+          <div class="relative">
+            <input 
+              type="password" 
+              id="input-password" 
+              placeholder="••••••••" 
+              required
+              class="w-full bg-slate-950 border border-slate-700 text-emerald-400 font-mono text-sm rounded-xl pl-4 pr-11 py-3 outline-none focus:border-emerald-500"
+            />
+            <button 
+              type="button" 
+              onclick="toggleSenhaVisibility()" 
+              class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-400 transition"
+              title="Mostrar/Ocultar Senha"
+            >
+              <i id="eye-icon" class="fa-solid fa-eye"></i>
+            </button>
+          </div>
         </div>
         
         <p id="login-error" class="text-xs text-red-400 hidden text-center font-mono">Senha incorreta ou cliente inativo.</p>
@@ -71,7 +81,7 @@
     </div>
   </div>
 
-  <!-- CONTEÚDO DA LANDING PAGE -->
+  <!-- CONTEÚDO PRINCIPAL DA LANDING PAGE -->
   <div id="app-content" class="hidden">
     <header class="border-b border-slate-800/80 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 h-24 flex items-center justify-between gap-4">
@@ -157,13 +167,28 @@
     let map = null;
     let markersGroup = null;
 
+    function toggleSenhaVisibility() {
+      const passwordInput = document.getElementById("input-password");
+      const eyeIcon = document.getElementById("eye-icon");
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        eyeIcon.classList.remove("fa-eye");
+        eyeIcon.classList.add("fa-eye-slash");
+      } else {
+        passwordInput.type = "password";
+        eyeIcon.classList.remove("fa-eye-slash");
+        eyeIcon.classList.add("fa-eye");
+      }
+    }
+
     function realizarLogin(event) {
       event.preventDefault();
-      const senhaInput = document.getElementById("input-password").value.trim();
+      const senhaInput = String(document.getElementById("input-password").value).trim().toLowerCase();
       const erroEl = document.getElementById("login-error");
 
-      // Compara a senha digitada com as senhas carregadas da planilha
-      const dispositivosDoCliente = todosDispositivos.filter(d => d.cliente_senha && d.cliente_senha === senhaInput);
+      const dispositivosDoCliente = todosDispositivos.filter(d => 
+        d.cliente_senha && String(d.cliente_senha).trim().toLowerCase() === senhaInput
+      );
 
       if (dispositivosDoCliente.length > 0) {
         clienteAutenticado = dispositivosDoCliente;
