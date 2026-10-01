@@ -1,99 +1,120 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MoveScreen Tracker — Painel em Tempo Real</title>
   
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS & FontAwesome -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Leaflet CSS & JS -->
+  <!-- Leaflet.js (Mapa Interativo) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  
+
   <style>
-    #map { height: calc(100vh - 80px); }
+    /* Filtro CSS para transformar o OpenStreetMap gratuito em Dark Mode limpo sem marcas d'água */
+    .leaflet-tile { 
+      filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3); 
+    }
+    .leaflet-container { 
+      background: #080c14 !important; 
+      font-family: inherit; 
+    }
+    .leaflet-popup-content-wrapper { 
+      background: #0f172a; 
+      color: white; 
+      border: 1px solid #10b98133; 
+      border-radius: 12px; 
+    }
+    .leaflet-popup-tip { 
+      background: #0f172a; 
+    }
+    #map { 
+      height: calc(100vh - 80px); 
+    }
   </style>
 </head>
-<body class="bg-gray-900 text-white font-sans antialiased">
+<body class="bg-[#080c14] text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between">
 
-  <!-- Header -->
-  <header class="h-20 bg-gray-800 border-b border-gray-700 px-6 flex items-center justify-between">
+  <!-- HEADER -->
+  <header class="h-20 bg-slate-900/90 border-b border-slate-800 px-6 flex items-center justify-between sticky top-0 z-50 backdrop-blur">
     <div class="flex items-center space-x-3">
       <div class="w-3.5 h-3.5 rounded-full bg-emerald-500 animate-pulse"></div>
-      <h1 class="text-xl font-bold tracking-wide">MoveScreen Tracker</h1>
+      <h1 class="text-xl font-extrabold tracking-wide text-white">MoveScreen <span class="text-emerald-400 font-mono text-sm">Tracker</span></h1>
     </div>
-    <div id="status-badge" class="text-xs bg-emerald-950 text-emerald-400 px-3 py-1.5 rounded-full border border-emerald-800">
-      Atualizado via n8n
+    <div id="status-badge" class="text-xs bg-slate-800 text-emerald-400 px-3 py-1.5 rounded-full border border-slate-700 font-mono flex items-center gap-2">
+      <i class="fa-solid fa-satellite text-emerald-400"></i> Telemetria Ativa
     </div>
   </header>
 
   <div class="flex flex-col md:flex-row h-[calc(100vh-80px)]">
     
-    <!-- Painel Lateral -->
-    <aside class="w-full md:w-80 bg-gray-800 border-r border-gray-700 p-6 flex flex-col justify-between overflow-y-auto">
+    <!-- PAINEL LATERAL -->
+    <aside class="w-full md:w-80 bg-slate-900/80 border-r border-slate-800 p-6 flex flex-col justify-between overflow-y-auto">
       <div class="space-y-5">
         <div>
-          <span class="text-xs font-semibold uppercase text-gray-400 tracking-wider">Cliente / Operação</span>
-          <p id="cliente-nome" class="text-lg font-bold text-emerald-400 mt-0.5">---</p>
+          <span class="text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider">Cliente / Operação</span>
+          <p id="cliente-nome" class="text-lg font-black text-emerald-400 mt-0.5">---</p>
         </div>
 
-        <div class="bg-gray-900/70 p-4 rounded-xl border border-gray-700/60 space-y-3">
+        <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 space-y-3">
           <div>
-            <span class="text-xs text-gray-400">Motorista</span>
-            <p id="motorista-nome" class="text-sm font-semibold text-gray-200">---</p>
+            <span class="text-xs text-slate-400">Motorista</span>
+            <p id="motorista-nome" class="text-sm font-semibold text-slate-200">---</p>
           </div>
-          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-gray-800">
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800">
             <div>
-              <span class="text-xs text-gray-400">Contato</span>
-              <p id="motorista-contato" class="text-xs font-mono text-gray-300">---</p>
+              <span class="text-[10px] text-slate-400 font-mono">Contato</span>
+              <p id="motorista-contato" class="text-xs font-mono text-slate-300">---</p>
             </div>
             <div>
-              <span class="text-xs text-gray-400">Status</span>
+              <span class="text-[10px] text-slate-400 font-mono">Status</span>
               <p id="status-op" class="text-xs font-semibold text-emerald-400">---</p>
             </div>
           </div>
         </div>
 
-        <div class="bg-gray-900/70 p-4 rounded-xl border border-gray-700/60 space-y-2">
+        <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 space-y-2">
           <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-400">Última Posição</span>
-            <span id="recorded-at" class="text-xs font-mono text-gray-300">--:--</span>
+            <span class="text-xs text-slate-400">Última Posição</span>
+            <span id="recorded-at" class="text-xs font-mono text-slate-300">--:--</span>
           </div>
           <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-400">Pontos Capturados</span>
+            <span class="text-xs text-slate-400">Pontos Capturados</span>
             <span id="total-pontos" class="text-xs font-bold text-emerald-400">0</span>
           </div>
-          <div class="flex justify-between items-center pt-2 border-t border-gray-800">
-            <span class="text-xs text-gray-400">AnyDesk ID</span>
-            <span id="anydesk-id" class="text-xs font-mono text-gray-300">---</span>
+          <div class="flex justify-between items-center pt-2 border-t border-slate-800">
+            <span class="text-xs text-slate-400">AnyDesk ID</span>
+            <span id="anydesk-id" class="text-xs font-mono text-slate-300">---</span>
           </div>
         </div>
       </div>
 
-      <div class="text-xs text-gray-500 text-center border-t border-gray-700/50 pt-4 mt-6">
-        MoveScreen DOOH Telemetry
+      <div class="text-[10px] font-mono text-slate-500 text-center border-t border-slate-800 pt-4 mt-6">
+        MoveScreen DOOH Telemetry Engine
       </div>
     </aside>
 
-    <!-- Mapa -->
+    <!-- MAPA -->
     <main class="flex-1 relative">
       <div id="map" class="w-full h-full"></div>
     </main>
 
   </div>
 
+  <!-- MAPA SCRIPT -->
   <script>
-    const map = L.map('map').setView([-8.1414, -34.9360], 15);
+    const map = L.map('map', { zoomControl: true }).setView([-8.1414, -34.9360], 15);
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    // Usa o OpenStreetMap público com a classe de estilo escuro
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
-      attribution: '&copy; OpenStreetMap &copy; CARTO'
+      attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
     let markersGroup = L.layerGroup().addTo(map);
-
     const data = [{"dispositivos":[{"device_id":"CATEST","tablet_nome":"N/A","cliente_nome":"TESTE","status_operacional":"em campo","motorista":"Cleverson","contato_motorista":558181330331,"chip_numero":558195918796,"chip_operadora":"TIM","anydesk_id":1168965007,"latitude_atual":-8.1413769,"longitude_atual":-34.9360306,"recorded_at":"2026-10-01T00:25:31.763","online":true,"total_pontos":44,"historico_rota":[{"latitude":-8.1414185,"longitude":-34.9360093,"recorded_at":"2026-09-30T21:28:33.366"},{"latitude":-8.1415002,"longitude":-34.9359613,"recorded_at":"2026-09-30T21:31:34.871"},{"latitude":-8.1414968,"longitude":-34.9359612,"recorded_at":"2026-09-30T21:34:36.523"},{"latitude":-8.1414807,"longitude":-34.9359569,"recorded_at":"2026-09-30T21:37:38.333"},{"latitude":-8.1413822,"longitude":-34.9360412,"recorded_at":"2026-09-30T21:40:39.924"},{"latitude":-8.1414283,"longitude":-34.9360008,"recorded_at":"2026-09-30T21:43:41.625"},{"latitude":-8.1413757,"longitude":-34.9360494,"recorded_at":"2026-09-30T21:46:43.209"},{"latitude":-8.1414265,"longitude":-34.9360066,"recorded_at":"2026-09-30T21:49:44.864"},{"latitude":-8.1414265,"longitude":-34.9360066,"recorded_at":"2026-09-30T21:50:46.202"},{"latitude":-8.1414068,"longitude":-34.9360073,"recorded_at":"2026-09-30T21:52:46.378"},{"latitude":-8.1414132,"longitude":-34.9360118,"recorded_at":"2026-09-30T21:55:47.876"},{"latitude":-8.1414053,"longitude":-34.9360218,"recorded_at":"2026-09-30T21:58:49.416"},{"latitude":-8.1414241,"longitude":-34.9360058,"recorded_at":"2026-09-30T22:01:51.058"},{"latitude":-8.1413972,"longitude":-34.9360312,"recorded_at":"2026-09-30T22:07:13.551"},{"latitude":-8.141402,"longitude":-34.9360257,"recorded_at":"2026-09-30T22:10:15.173"},{"latitude":-8.141425,"longitude":-34.936013,"recorded_at":"2026-09-30T22:13:18.456"},{"latitude":-8.1413886,"longitude":-34.9360431,"recorded_at":"2026-09-30T22:16:21.581"},{"latitude":-8.141415,"longitude":-34.9360086,"recorded_at":"2026-09-30T23:12:05.977"},{"latitude":-8.1414003,"longitude":-34.9360289,"recorded_at":"2026-09-30T23:15:09.544"},{"latitude":-8.1413954,"longitude":-34.936016,"recorded_at":"2026-09-30T23:18:11.041"},{"latitude":-8.141393,"longitude":-34.9360344,"recorded_at":"2026-09-30T23:21:13.024"},{"latitude":-8.1414056,"longitude":-34.9360082,"recorded_at":"2026-09-30T23:24:14.949"},{"latitude":-8.1414276,"longitude":-34.9360131,"recorded_at":"2026-09-30T23:27:16.527"},{"latitude":-8.1413779,"longitude":-34.9360489,"recorded_at":"2026-09-30T23:30:17.906"},{"latitude":-8.1414179,"longitude":-34.9360138,"recorded_at":"2026-09-30T23:33:19.534"},{"latitude":-8.1414924,"longitude":-34.9359654,"recorded_at":"2026-09-30T23:36:21.179"},{"latitude":-8.1414009,"longitude":-34.9359346,"recorded_at":"2026-09-30T23:37:31.451"},{"latitude":-8.1413773,"longitude":-34.9360524,"recorded_at":"2026-09-30T23:40:06.788"},{"latitude":-8.141395,"longitude":-34.9360383,"recorded_at":"2026-09-30T23:43:08.385"},{"latitude":-8.1413977,"longitude":-34.9360323,"recorded_at":"2026-09-30T23:46:10.145"},{"latitude":-8.141379,"longitude":-34.9360524,"recorded_at":"2026-09-30T23:49:11.697"},{"latitude":-8.1413946,"longitude":-34.9360407,"recorded_at":"2026-09-30T23:52:13.331"},{"latitude":-8.1413972,"longitude":-34.9360219,"recorded_at":"2026-09-30T23:55:14.942"},{"latitude":-8.14139,"longitude":-34.9360475,"recorded_at":"2026-09-30T23:58:16.58"},{"latitude":-8.1413998,"longitude":-34.9360358,"recorded_at":"2026-10-01T00:01:18.333"},{"latitude":-8.1413839,"longitude":-34.9360473,"recorded_at":"2026-10-01T00:04:20.22"},{"latitude":-8.1414007,"longitude":-34.9360233,"recorded_at":"2026-10-01T00:07:21.818"},{"latitude":-8.1414007,"longitude":-34.9360233,"recorded_at":"2026-10-01T00:07:34.142"},{"latitude":-8.1414144,"longitude":-34.9360167,"recorded_at":"2026-10-01T00:10:23.452"},{"latitude":-8.1414274,"longitude":-34.9360111,"recorded_at":"2026-10-01T00:13:25.152"},{"latitude":-8.1413735,"longitude":-34.9360374,"recorded_at":"2026-10-01T00:16:26.974"},{"latitude":-8.141461,"longitude":-34.9359826,"recorded_at":"2026-10-01T00:19:28.53"},{"latitude":-8.1414693,"longitude":-34.9359863,"recorded_at":"2026-10-01T00:22:30.191"},{"latitude":-8.1413769,"longitude":-34.9360306,"recorded_at":"2026-10-01T00:25:31.763"}]}]}];
 
     function renderData() {
@@ -111,7 +132,7 @@
         document.getElementById("total-pontos").innerText = dev.total_pontos;
         document.getElementById("anydesk-id").innerText = dev.anydesk_id;
 
-        // Traçado da Rota (Polyline)
+        // Desenha o Traçado da Rota (Polyline)
         if (dev.historico_rota && dev.historico_rota.length > 0) {
           const latLngs = dev.historico_rota.map(p => [p.latitude, p.longitude]);
           L.polyline(latLngs, {
@@ -124,10 +145,10 @@
         // Pino da Posição Atual
         const marker = L.marker([dev.latitude_atual, dev.longitude_atual]).addTo(markersGroup);
         marker.bindPopup(`
-          <div style="color: #111827; font-family: sans-serif;">
-            <b style="font-size: 14px;">${dev.cliente_nome}</b><br>
-            <span style="font-size: 12px; color: #4b5563;">Motorista: ${dev.motorista}</span><br>
-            <span style="font-size: 11px; color: #6b7280;">Horário: ${new Date(dev.recorded_at).toLocaleTimeString("pt-BR")}</span>
+          <div style="font-family: sans-serif;">
+            <b style="font-size: 14px; color: #10b981;">${dev.cliente_nome}</b><br>
+            <span style="font-size: 12px; color: #cbd5e1;">Motorista: ${dev.motorista}</span><br>
+            <span style="font-size: 11px; color: #94a3b8;">Horário: ${new Date(dev.recorded_at).toLocaleTimeString("pt-BR")}</span>
           </div>
         `);
 
