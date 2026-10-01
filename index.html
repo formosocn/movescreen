@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MoveScreen Tracker — Painel em Tempo Real</title>
+  <title>MoveScreen Tracker — Painel de Rastreamento</title>
   
   <!-- Tailwind CSS & FontAwesome -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -14,9 +14,9 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <style>
-    /* Filtro CSS para transformar o OpenStreetMap gratuito em Dark Mode limpo sem marcas d'água */
+    /* Dark Mode no OpenStreetMap sem marca d'água */
     .leaflet-tile { 
-      filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3); 
+      filter: brightness(0.65) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3); 
     }
     .leaflet-container { 
       background: #080c14 !important; 
@@ -32,131 +32,214 @@
       background: #0f172a; 
     }
     #map { 
-      height: calc(100vh - 80px); 
+      height: 480px; 
+    }
+
+    /* Estilo do numeral do pino no mapa */
+    .custom-pino-icon {
+      background-color: #10b981;
+      color: #080c14;
+      font-weight: 900;
+      font-size: 11px;
+      border-radius: 9999px;
+      text-align: center;
+      line-height: 26px;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
     }
   </style>
 </head>
-<body class="bg-[#080c14] text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between">
+<body class="bg-[#080c14] text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-black">
 
-  <!-- HEADER -->
-  <header class="h-20 bg-slate-900/90 border-b border-slate-800 px-6 flex items-center justify-between sticky top-0 z-50 backdrop-blur">
-    <div class="flex items-center space-x-3">
-      <div class="w-3.5 h-3.5 rounded-full bg-emerald-500 animate-pulse"></div>
-      <h1 class="text-xl font-extrabold tracking-wide text-white">MoveScreen <span class="text-emerald-400 font-mono text-sm">Tracker</span></h1>
-    </div>
-    <div id="status-badge" class="text-xs bg-slate-800 text-emerald-400 px-3 py-1.5 rounded-full border border-slate-700 font-mono flex items-center gap-2">
-      <i class="fa-solid fa-satellite text-emerald-400"></i> Telemetria Ativa
-    </div>
-  </header>
+  <div>
+    <!-- HEADER NAVEGAÇÃO -->
+    <header class="border-b border-slate-800/80 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 h-24 flex items-center justify-between gap-4">
+        
+        <!-- LOGO MOVESCREEN COM BRILHO SUAVE -->
+        <div class="flex items-center gap-4">
+          <a href="#" class="flex items-center">
+            <img 
+              src="https://res.cloudinary.com/dzw4kv0ue/image/upload/v1790793900/Gemini_Generated_Image_gdybgigdybgigdyb_zrkzey.jpg" 
+              alt="MoveScreen Logo" 
+              class="h-14 sm:h-16 w-auto object-contain rounded-xl border border-slate-700/60 shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] transition duration-300"
+            />
+          </a>
+          <div class="hidden sm:block">
+            <h1 class="text-xl font-black tracking-wide text-white">MoveScreen</h1>
+            <p class="text-xs text-emerald-400 font-mono font-semibold">Painel de Telemetria & Rastreamento</p>
+          </div>
+        </div>
 
-  <div class="flex flex-col md:flex-row h-[calc(100vh-80px)]">
-    
-    <!-- PAINEL LATERAL -->
-    <aside class="w-full md:w-80 bg-slate-900/80 border-r border-slate-800 p-6 flex flex-col justify-between overflow-y-auto">
-      <div class="space-y-5">
+        <!-- STATUS BADGE -->
+        <div class="flex items-center gap-3">
+          <div id="status-badge" class="text-xs bg-slate-950 text-emerald-400 px-3.5 py-2 rounded-full border border-slate-800 font-mono flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span> Telemetria Ativa
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-6">
+      
+      <!-- PAINEL SUPERIOR: TÍTULO E FILTRO POR DATA -->
+      <section class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900/80 p-6 rounded-3xl border border-slate-800 shadow-xl backdrop-blur">
         <div>
-          <span class="text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider">Cliente / Operação</span>
-          <p id="cliente-nome" class="text-lg font-black text-emerald-400 mt-0.5">---</p>
+          <span class="text-emerald-400 font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-satellite-dish"></i> Rastreamento Veicular
+          </span>
+          <h2 class="text-2xl font-black text-white mt-1">Histórico de Localizações em Tempo Real</h2>
+          <p class="text-xs text-slate-400 mt-0.5">Selecione uma data para filtrar o traçado da rota e as coordenadas capturadas.</p>
         </div>
 
-        <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 space-y-3">
+        <!-- FILTRO DE DATA -->
+        <div class="flex items-center gap-3 bg-slate-950 p-2.5 rounded-2xl border border-slate-800 w-full md:w-auto">
+          <i class="fa-solid fa-calendar-days text-emerald-400 text-sm pl-2"></i>
+          <label for="filter-date" class="text-xs font-mono text-slate-400">Filtrar Data:</label>
+          <input 
+            type="date" 
+            id="filter-date" 
+            onchange="filtrarPorData()" 
+            class="bg-slate-900 border border-slate-700 text-emerald-400 font-mono text-xs rounded-xl px-3 py-2 outline-none focus:border-emerald-500 w-full md:w-auto cursor-pointer"
+          />
+        </div>
+      </section>
+
+      <!-- MAPA INTERATIVO -->
+      <section class="rounded-3xl overflow-hidden border border-slate-800 shadow-2xl relative">
+        <div id="map" class="w-full z-10"></div>
+      </section>
+
+      <!-- TABELA DE LOCALIZAÇÕES DETECTADAS ABAIXO DO MAPA -->
+      <section class="bg-slate-900/80 rounded-3xl border border-slate-800 p-6 md:p-8 shadow-2xl space-y-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-4">
           <div>
-            <span class="text-xs text-slate-400">Motorista</span>
-            <p id="motorista-nome" class="text-sm font-semibold text-slate-200">---</p>
+            <span class="text-xs font-mono text-slate-400 uppercase tracking-wider">Detalhamento Técnico</span>
+            <h3 class="text-lg font-black text-white flex items-center gap-2 mt-0.5">
+              <i class="fa-solid fa-location-dot text-emerald-400"></i> Localizações Detectadas
+            </h3>
           </div>
-          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800">
-            <div>
-              <span class="text-[10px] text-slate-400 font-mono">Contato</span>
-              <p id="motorista-contato" class="text-xs font-mono text-slate-300">---</p>
-            </div>
-            <div>
-              <span class="text-[10px] text-slate-400 font-mono">Status</span>
-              <p id="status-op" class="text-xs font-semibold text-emerald-400">---</p>
-            </div>
-          </div>
+          <span id="total-registros-badge" class="px-3.5 py-1.5 bg-slate-950 text-emerald-400 font-mono text-xs rounded-full border border-slate-800">
+            0 registros
+          </span>
         </div>
 
-        <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 space-y-2">
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-slate-400">Última Posição</span>
-            <span id="recorded-at" class="text-xs font-mono text-slate-300">--:--</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-slate-400">Pontos Capturados</span>
-            <span id="total-pontos" class="text-xs font-bold text-emerald-400">0</span>
-          </div>
-          <div class="flex justify-between items-center pt-2 border-t border-slate-800">
-            <span class="text-xs text-slate-400">AnyDesk ID</span>
-            <span id="anydesk-id" class="text-xs font-mono text-slate-300">---</span>
-          </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs font-mono">
+            <thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
+              <tr>
+                <th class="py-3.5 px-4">Pino</th>
+                <th class="py-3.5 px-4">Data / Hora Local</th>
+                <th class="py-3.5 px-4">Latitude</th>
+                <th class="py-3.5 px-4">Longitude</th>
+              </tr>
+            </thead>
+            <tbody id="table-body" class="divide-y divide-slate-800/60 text-slate-300">
+              <!-- Preenchido dinamicamente via JS -->
+            </tbody>
+          </table>
         </div>
-      </div>
+      </section>
 
-      <div class="text-[10px] font-mono text-slate-500 text-center border-t border-slate-800 pt-4 mt-6">
-        MoveScreen DOOH Telemetry Engine
-      </div>
-    </aside>
-
-    <!-- MAPA -->
-    <main class="flex-1 relative">
-      <div id="map" class="w-full h-full"></div>
     </main>
-
   </div>
 
-  <!-- MAPA SCRIPT -->
-  <script>
-    const map = L.map('map', { zoomControl: true }).setView([-8.1414, -34.9360], 15);
+  <!-- RODAPÉ -->
+  <footer class="border-t border-slate-800/80 bg-[#060910] py-6 px-4 mt-12 text-center text-xs font-mono text-slate-500">
+    MoveScreen DOOH Telemetry Engine &copy; 2026 — Todos os direitos reservados
+  </footer>
 
-    // Usa o OpenStreetMap público com a classe de estilo escuro
+  <!-- LÓGICA DO MAPA E TABELA -->
+  <script>
+    const map = L.map('map', { zoomControl: true }).setView([-8.1414, -34.9360], 14);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
     let markersGroup = L.layerGroup().addTo(map);
-    const data = [{"dispositivos":[{"device_id":"CATEST","tablet_nome":"N/A","cliente_nome":"Cliente não informado","status_operacional":"em campo","motorista":"Cleverson","contato_motorista":558181330331,"chip_numero":558195918796,"chip_operadora":"TIM","anydesk_id":1168965007,"latitude_atual":-8.1413769,"longitude_atual":-34.9360306,"recorded_at":"2026-10-01T00:25:31.763","online":true,"total_pontos":67,"historico_rota":[{"latitude":-8.1414185,"longitude":-34.9360093,"recorded_at":"2026-09-30T21:28:33.366"},{"latitude":-8.1415002,"longitude":-34.9359613,"recorded_at":"2026-09-30T21:31:34.871"},{"latitude":-8.1414968,"longitude":-34.9359612,"recorded_at":"2026-09-30T21:34:36.523"},{"latitude":-8.1414807,"longitude":-34.9359569,"recorded_at":"2026-09-30T21:37:38.333"},{"latitude":-8.1413822,"longitude":-34.9360412,"recorded_at":"2026-09-30T21:40:39.924"},{"latitude":-8.1414283,"longitude":-34.9360008,"recorded_at":"2026-09-30T21:43:41.625"},{"latitude":-8.1413757,"longitude":-34.9360494,"recorded_at":"2026-09-30T21:46:43.209"},{"latitude":-8.1414265,"longitude":-34.9360066,"recorded_at":"2026-09-30T21:49:44.864"},{"latitude":-8.1414265,"longitude":-34.9360066,"recorded_at":"2026-09-30T21:50:46.202"},{"latitude":-8.1414068,"longitude":-34.9360073,"recorded_at":"2026-09-30T21:52:46.378"},{"latitude":-8.1414132,"longitude":-34.9360118,"recorded_at":"2026-09-30T21:55:47.876"},{"latitude":-8.1414053,"longitude":-34.9360218,"recorded_at":"2026-09-30T21:58:49.416"},{"latitude":-8.1414241,"longitude":-34.9360058,"recorded_at":"2026-09-30T22:01:51.058"},{"latitude":-8.1413972,"longitude":-34.9360312,"recorded_at":"2026-09-30T22:07:13.551"},{"latitude":-8.141402,"longitude":-34.9360257,"recorded_at":"2026-09-30T22:10:15.173"},{"latitude":-8.141425,"longitude":-34.936013,"recorded_at":"2026-09-30T22:13:18.456"},{"latitude":-8.1413886,"longitude":-34.9360431,"recorded_at":"2026-09-30T22:16:21.581"},{"latitude":-8.1413792,"longitude":-34.9360421,"recorded_at":"2026-09-30T22:19:23.781"},{"latitude":-8.1413772,"longitude":-34.9360502,"recorded_at":"2026-09-30T22:22:25.569"},{"latitude":-8.1413818,"longitude":-34.9360513,"recorded_at":"2026-09-30T22:25:27.213"},{"latitude":-8.1415148,"longitude":-34.9359505,"recorded_at":"2026-09-30T22:28:29.365"},{"latitude":-8.1414136,"longitude":-34.9360236,"recorded_at":"2026-09-30T22:31:31.497"},{"latitude":-8.1413862,"longitude":-34.9360393,"recorded_at":"2026-09-30T22:34:33.572"},{"latitude":-8.1413974,"longitude":-34.9360286,"recorded_at":"2026-09-30T22:37:35.628"},{"latitude":-8.1414442,"longitude":-34.9360011,"recorded_at":"2026-09-30T22:40:38.366"},{"latitude":-8.1414288,"longitude":-34.9360105,"recorded_at":"2026-09-30T22:43:37.188"},{"latitude":-8.1414445,"longitude":-34.9359981,"recorded_at":"2026-09-30T22:46:39.026"},{"latitude":-8.1414178,"longitude":-34.9360202,"recorded_at":"2026-09-30T22:49:41.56"},{"latitude":-8.1414043,"longitude":-34.9360309,"recorded_at":"2026-09-30T22:52:42.651"},{"latitude":-8.141503,"longitude":-34.9359615,"recorded_at":"2026-09-30T22:55:43.911"},{"latitude":-8.141423,"longitude":-34.936016,"recorded_at":"2026-09-30T22:58:45.502"},{"latitude":-8.1414031,"longitude":-34.9360285,"recorded_at":"2026-09-30T23:01:47.195"},{"latitude":-8.1414302,"longitude":-34.9360114,"recorded_at":"2026-09-30T23:04:50.588"},{"latitude":-8.1414397,"longitude":-34.9359868,"recorded_at":"2026-09-30T23:07:52.788"},{"latitude":-8.1414127,"longitude":-34.9360242,"recorded_at":"2026-09-30T23:10:54.212"},{"latitude":-8.141415,"longitude":-34.9360086,"recorded_at":"2026-09-30T23:12:05.977"},{"latitude":-8.1414125,"longitude":-34.9360236,"recorded_at":"2026-09-30T23:13:55.872"},{"latitude":-8.1414003,"longitude":-34.9360289,"recorded_at":"2026-09-30T23:15:09.544"},{"latitude":-8.1414153,"longitude":-34.9360175,"recorded_at":"2026-09-30T23:17:01.543"},{"latitude":-8.1413954,"longitude":-34.936016,"recorded_at":"2026-09-30T23:18:11.041"},{"latitude":-8.141408,"longitude":-34.9360264,"recorded_at":"2026-09-30T23:20:05.52"},{"latitude":-8.141393,"longitude":-34.9360344,"recorded_at":"2026-09-30T23:21:13.024"},{"latitude":-8.1413881,"longitude":-34.9360442,"recorded_at":"2026-09-30T23:23:01.503"},{"latitude":-8.1414056,"longitude":-34.9360082,"recorded_at":"2026-09-30T23:24:14.949"},{"latitude":-8.1413805,"longitude":-34.9360393,"recorded_at":"2026-09-30T23:26:03.976"},{"latitude":-8.1414276,"longitude":-34.9360131,"recorded_at":"2026-09-30T23:27:16.527"},{"latitude":-8.1413779,"longitude":-34.9360489,"recorded_at":"2026-09-30T23:30:17.906"},{"latitude":-8.1414179,"longitude":-34.9360138,"recorded_at":"2026-09-30T23:33:19.534"},{"latitude":-8.1414924,"longitude":-34.9359654,"recorded_at":"2026-09-30T23:36:21.179"},{"latitude":-8.1414009,"longitude":-34.9359346,"recorded_at":"2026-09-30T23:37:31.451"},{"latitude":-8.1413773,"longitude":-34.9360524,"recorded_at":"2026-09-30T23:40:06.788"},{"latitude":-8.141395,"longitude":-34.9360383,"recorded_at":"2026-09-30T23:43:08.385"},{"latitude":-8.1413977,"longitude":-34.9360323,"recorded_at":"2026-09-30T23:46:10.145"},{"latitude":-8.141379,"longitude":-34.9360524,"recorded_at":"2026-09-30T23:49:11.697"},{"latitude":-8.1413946,"longitude":-34.9360407,"recorded_at":"2026-09-30T23:52:13.331"},{"latitude":-8.1413972,"longitude":-34.9360219,"recorded_at":"2026-09-30T23:55:14.942"},{"latitude":-8.14139,"longitude":-34.9360475,"recorded_at":"2026-09-30T23:58:16.58"},{"latitude":-8.1413998,"longitude":-34.9360358,"recorded_at":"2026-10-01T00:01:18.333"},{"latitude":-8.1413839,"longitude":-34.9360473,"recorded_at":"2026-10-01T00:04:20.22"},{"latitude":-8.1414007,"longitude":-34.9360233,"recorded_at":"2026-10-01T00:07:21.818"},{"latitude":-8.1414007,"longitude":-34.9360233,"recorded_at":"2026-10-01T00:07:34.142"},{"latitude":-8.1414144,"longitude":-34.9360167,"recorded_at":"2026-10-01T00:10:23.452"},{"latitude":-8.1414274,"longitude":-34.9360111,"recorded_at":"2026-10-01T00:13:25.152"},{"latitude":-8.1413735,"longitude":-34.9360374,"recorded_at":"2026-10-01T00:16:26.974"},{"latitude":-8.141461,"longitude":-34.9359826,"recorded_at":"2026-10-01T00:19:28.53"},{"latitude":-8.1414693,"longitude":-34.9359863,"recorded_at":"2026-10-01T00:22:30.191"},{"latitude":-8.1413769,"longitude":-34.9360306,"recorded_at":"2026-10-01T00:25:31.763"}]}]}];
+    const rawData = [{"dispositivos":[{"device_id":"CATEST","tablet_nome":"N/A","cliente_nome":"Cliente não informado","status_operacional":"em campo","motorista":"Cleverson","contato_motorista":558181330331,"chip_numero":558195918796,"chip_operadora":"TIM","anydesk_id":1168965007,"latitude_atual":-8.1413769,"longitude_atual":-34.9360306,"recorded_at":"2026-10-01T00:25:31.763","online":true,"total_pontos":67,"historico_rota":[{"latitude":-8.1414185,"longitude":-34.9360093,"recorded_at":"2026-09-30T21:28:33.366"},{"latitude":-8.1415002,"longitude":-34.9359613,"recorded_at":"2026-09-30T21:31:34.871"},{"latitude":-8.1414968,"longitude":-34.9359612,"recorded_at":"2026-09-30T21:34:36.523"},{"latitude":-8.1414807,"longitude":-34.9359569,"recorded_at":"2026-09-30T21:37:38.333"},{"latitude":-8.1413822,"longitude":-34.9360412,"recorded_at":"2026-09-30T21:40:39.924"},{"latitude":-8.1414283,"longitude":-34.9360008,"recorded_at":"2026-09-30T21:43:41.625"},{"latitude":-8.1413757,"longitude":-34.9360494,"recorded_at":"2026-09-30T21:46:43.209"},{"latitude":-8.1414265,"longitude":-34.9360066,"recorded_at":"2026-09-30T21:49:44.864"},{"latitude":-8.1414265,"longitude":-34.9360066,"recorded_at":"2026-09-30T21:50:46.202"},{"latitude":-8.1414068,"longitude":-34.9360073,"recorded_at":"2026-09-30T21:52:46.378"},{"latitude":-8.1414132,"longitude":-34.9360118,"recorded_at":"2026-09-30T21:55:47.876"},{"latitude":-8.1414053,"longitude":-34.9360218,"recorded_at":"2026-09-30T21:58:49.416"},{"latitude":-8.1414241,"longitude":-34.9360058,"recorded_at":"2026-09-30T22:01:51.058"},{"latitude":-8.1413972,"longitude":-34.9360312,"recorded_at":"2026-09-30T22:07:13.551"},{"latitude":-8.141402,"longitude":-34.9360257,"recorded_at":"2026-09-30T22:10:15.173"},{"latitude":-8.141425,"longitude":-34.936013,"recorded_at":"2026-09-30T22:13:18.456"},{"latitude":-8.1413886,"longitude":-34.9360431,"recorded_at":"2026-09-30T22:16:21.581"},{"latitude":-8.1413792,"longitude":-34.9360421,"recorded_at":"2026-09-30T22:19:23.781"},{"latitude":-8.1413772,"longitude":-34.9360502,"recorded_at":"2026-09-30T22:22:25.569"},{"latitude":-8.1413818,"longitude":-34.9360513,"recorded_at":"2026-09-30T22:25:27.213"},{"latitude":-8.1415148,"longitude":-34.9359505,"recorded_at":"2026-09-30T22:28:29.365"},{"latitude":-8.1414136,"longitude":-34.9360236,"recorded_at":"2026-09-30T22:31:31.497"},{"latitude":-8.1413862,"longitude":-34.9360393,"recorded_at":"2026-09-30T22:34:33.572"},{"latitude":-8.1413974,"longitude":-34.9360286,"recorded_at":"2026-09-30T22:37:35.628"},{"latitude":-8.1414442,"longitude":-34.9360011,"recorded_at":"2026-09-30T22:40:38.366"},{"latitude":-8.1414288,"longitude":-34.9360105,"recorded_at":"2026-09-30T22:43:37.188"},{"latitude":-8.1414445,"longitude":-34.9359981,"recorded_at":"2026-09-30T22:46:39.026"},{"latitude":-8.1414178,"longitude":-34.9360202,"recorded_at":"2026-09-30T22:49:41.56"},{"latitude":-8.1414043,"longitude":-34.9360309,"recorded_at":"2026-09-30T22:52:42.651"},{"latitude":-8.141503,"longitude":-34.9359615,"recorded_at":"2026-09-30T22:55:43.911"},{"latitude":-8.141423,"longitude":-34.936016,"recorded_at":"2026-09-30T22:58:45.502"},{"latitude":-8.1414031,"longitude":-34.9360285,"recorded_at":"2026-09-30T23:01:47.195"},{"latitude":-8.1414302,"longitude":-34.9360114,"recorded_at":"2026-09-30T23:04:50.588"},{"latitude":-8.1414397,"longitude":-34.9359868,"recorded_at":"2026-09-30T23:07:52.788"},{"latitude":-8.1414127,"longitude":-34.9360242,"recorded_at":"2026-09-30T23:10:54.212"},{"latitude":-8.141415,"longitude":-34.9360086,"recorded_at":"2026-09-30T23:12:05.977"},{"latitude":-8.1414125,"longitude":-34.9360236,"recorded_at":"2026-09-30T23:13:55.872"},{"latitude":-8.1414003,"longitude":-34.9360289,"recorded_at":"2026-09-30T23:15:09.544"},{"latitude":-8.1414153,"longitude":-34.9360175,"recorded_at":"2026-09-30T23:17:01.543"},{"latitude":-8.1413954,"longitude":-34.936016,"recorded_at":"2026-09-30T23:18:11.041"},{"latitude":-8.141408,"longitude":-34.9360264,"recorded_at":"2026-09-30T23:20:05.52"},{"latitude":-8.141393,"longitude":-34.9360344,"recorded_at":"2026-09-30T23:21:13.024"},{"latitude":-8.1413881,"longitude":-34.9360442,"recorded_at":"2026-09-30T23:23:01.503"},{"latitude":-8.1414056,"longitude":-34.9360082,"recorded_at":"2026-09-30T23:24:14.949"},{"latitude":-8.1413805,"longitude":-34.9360393,"recorded_at":"2026-09-30T23:26:03.976"},{"latitude":-8.1414276,"longitude":-34.9360131,"recorded_at":"2026-09-30T23:27:16.527"},{"latitude":-8.1413779,"longitude":-34.9360489,"recorded_at":"2026-09-30T23:30:17.906"},{"latitude":-8.1414179,"longitude":-34.9360138,"recorded_at":"2026-09-30T23:33:19.534"},{"latitude":-8.1414924,"longitude":-34.9359654,"recorded_at":"2026-09-30T23:36:21.179"},{"latitude":-8.1414009,"longitude":-34.9359346,"recorded_at":"2026-09-30T23:37:31.451"},{"latitude":-8.1413773,"longitude":-34.9360524,"recorded_at":"2026-09-30T23:40:06.788"},{"latitude":-8.141395,"longitude":-34.9360383,"recorded_at":"2026-09-30T23:43:08.385"},{"latitude":-8.1413977,"longitude":-34.9360323,"recorded_at":"2026-09-30T23:46:10.145"},{"latitude":-8.141379,"longitude":-34.9360524,"recorded_at":"2026-09-30T23:49:11.697"},{"latitude":-8.1413946,"longitude":-34.9360407,"recorded_at":"2026-09-30T23:52:13.331"},{"latitude":-8.1413972,"longitude":-34.9360219,"recorded_at":"2026-09-30T23:55:14.942"},{"latitude":-8.14139,"longitude":-34.9360475,"recorded_at":"2026-09-30T23:58:16.58"},{"latitude":-8.1413998,"longitude":-34.9360358,"recorded_at":"2026-10-01T00:01:18.333"},{"latitude":-8.1413839,"longitude":-34.9360473,"recorded_at":"2026-10-01T00:04:20.22"},{"latitude":-8.1414007,"longitude":-34.9360233,"recorded_at":"2026-10-01T00:07:21.818"},{"latitude":-8.1414007,"longitude":-34.9360233,"recorded_at":"2026-10-01T00:07:34.142"},{"latitude":-8.1414144,"longitude":-34.9360167,"recorded_at":"2026-10-01T00:10:23.452"},{"latitude":-8.1414274,"longitude":-34.9360111,"recorded_at":"2026-10-01T00:13:25.152"},{"latitude":-8.1413735,"longitude":-34.9360374,"recorded_at":"2026-10-01T00:16:26.974"},{"latitude":-8.141461,"longitude":-34.9359826,"recorded_at":"2026-10-01T00:19:28.53"},{"latitude":-8.1414693,"longitude":-34.9359863,"recorded_at":"2026-10-01T00:22:30.191"},{"latitude":-8.1413769,"longitude":-34.9360306,"recorded_at":"2026-10-01T00:25:31.763"}]}]}];
+    const dispositivos = rawData[0].dispositivos || [];
 
-    function renderData() {
+    function renderizar(dataFiltro) {
       markersGroup.clearLayers();
-      const dispositivos = data[0].dispositivos;
+      const tableBody = document.getElementById("table-body");
+      tableBody.innerHTML = "";
+
+      let totalExibidos = 0;
+      let todosPontosBounds = [];
 
       dispositivos.forEach(dev => {
-        if (!dev.latitude_atual || !dev.longitude_atual) return;
+        let pontos = dev.historico_rota || [];
 
-        document.getElementById("cliente-nome").innerText = dev.cliente_nome;
-        document.getElementById("motorista-nome").innerText = dev.motorista;
-        document.getElementById("motorista-contato").innerText = dev.contato_motorista;
-        document.getElementById("status-op").innerText = dev.status_operacional;
-        document.getElementById("recorded-at").innerText = new Date(dev.recorded_at).toLocaleTimeString("pt-BR");
-        document.getElementById("total-pontos").innerText = dev.total_pontos;
-        document.getElementById("anydesk-id").innerText = dev.anydesk_id;
-
-        // Desenha o Traçado da Rota (Polyline)
-        if (dev.historico_rota && dev.historico_rota.length > 0) {
-          const latLngs = dev.historico_rota.map(p => [p.latitude, p.longitude]);
-          L.polyline(latLngs, {
-            color: '#10b981',
-            weight: 4,
-            opacity: 0.85
-          }).addTo(markersGroup);
+        // Aplica o filtro de data se houver seleção
+        if (dataFiltro) {
+          pontos = pontos.filter(p => p.recorded_at && p.recorded_at.startsWith(dataFiltro));
         }
 
-        // Pino da Posição Atual
-        const marker = L.marker([dev.latitude_atual, dev.longitude_atual]).addTo(markersGroup);
-        marker.bindPopup(`
-          <div style="font-family: sans-serif;">
-            <b style="font-size: 14px; color: #10b981;">${dev.cliente_nome}</b><br>
-            <span style="font-size: 12px; color: #cbd5e1;">Motorista: ${dev.motorista}</span><br>
-            <span style="font-size: 11px; color: #94a3b8;">Horário: ${new Date(dev.recorded_at).toLocaleTimeString("pt-BR")}</span>
-          </div>
-        `);
+        if (pontos.length === 0) return;
 
-        map.setView([dev.latitude_atual, dev.longitude_atual], 16);
+        const latLngs = pontos.map(p => [p.latitude, p.longitude]);
+        todosPontosBounds = todosPontosBounds.concat(latLngs);
+
+        // Desenha a linha da rota no mapa
+        L.polyline(latLngs, { 
+          color: '#10b981', 
+          weight: 4, 
+          opacity: 0.85 
+        }).addTo(markersGroup);
+
+        // Plota os pinos numerados no mapa e preenche a tabela
+        pontos.forEach((p, idx) => {
+          totalExibidos++;
+          const pinoLabel = dev.pino_identificador || `#${idx + 1}`;
+
+          const pinoIcon = L.divIcon({
+            className: 'custom-pino-icon',
+            html: pinoLabel,
+            iconSize: [28, 28],
+            iconAnchor: [14, 14]
+          });
+
+          L.marker([p.latitude, p.longitude], { icon: pinoIcon })
+            .bindPopup(`
+              <div style="font-family: sans-serif;">
+                <b style="color: #10b981; font-size: 13px;">Identificador: ${pinoLabel}</b><br>
+                <span style="font-size: 11px; color: #cbd5e1;">Data: ${new Date(p.recorded_at).toLocaleString('pt-BR')}</span><br>
+                <span style="font-size: 10px; color: #94a3b8; font-family: monospace;">Lat: ${p.latitude} | Lng: ${p.longitude}</span>
+              </div>
+            `)
+            .addTo(markersGroup);
+
+          // Injeta a linha na tabela abaixo do mapa
+          tableBody.innerHTML += `
+            <tr class="hover:bg-slate-800/40 transition">
+              <td class="py-3 px-4 font-bold text-emerald-400">${pinoLabel}</td>
+              <td class="py-3 px-4">${new Date(p.recorded_at).toLocaleString('pt-BR')}</td>
+              <td class="py-3 px-4 text-slate-300">${p.latitude}</td>
+              <td class="py-3 px-4 text-slate-300">${p.longitude}</td>
+            </tr>
+          `;
+        });
       });
+
+      document.getElementById("total-registros-badge").innerText = `${totalExibidos} registros`;
+
+      if (todosPontosBounds.length > 0) {
+        map.fitBounds(todosPontosBounds, { padding: [30, 30] });
+      }
     }
 
-    renderData();
+    function filtrarPorData() {
+      const dateVal = document.getElementById("filter-date").value;
+      renderizar(dateVal);
+    }
+
+    // Inicialização sem filtro de data
+    renderizar(null);
   </script>
 </body>
 </html>
