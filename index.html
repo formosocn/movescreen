@@ -1,409 +1,182 @@
-<!DOCTYPE html>
-<html lang="pt-BR" class="dark">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MoveScreen Tracker — Portal do Cliente</title>
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+import React from 'react';
 
-  <style>
-    .leaflet-tile { 
-      filter: brightness(0.65) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3); 
-    }
-    .leaflet-container { background: #080c14 !important; font-family: inherit; }
-    .leaflet-popup-content-wrapper { background: #0f172a; color: white; border: 1px solid #10b98133; border-radius: 12px; }
-    .leaflet-popup-tip { background: #0f172a; }
-    #map { height: 480px; }
+export default function MoveScreenLanding() {
+  const whatsappUrl = "https://wa.me/5581981330331?text=Olá!%20Vim%20pelo%20site%20da%20MoveScreen%20e%20quero%20saber%20mais%20sobre%20as%20cotas%20de%20anúncio.";
 
-    .custom-pino-icon {
-      background-color: #10b981;
-      color: #080c14;
-      font-weight: 900;
-      font-size: 11px;
-      border-radius: 9999px;
-      text-align: center;
-      line-height: 26px;
-      border: 2px solid #ffffff;
-      box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
-      transition: all 0.3s ease;
-    }
-
-    .linha-selecionada {
-      background-color: rgba(16, 185, 129, 0.15) !important;
-      border-left: 4px solid #10b981;
-    }
-  </style>
-</head>
-<body class="bg-[#080c14] text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between">
-
-  <!-- MODAL DE LOGIN COM OLHINHO -->
-  <div id="login-modal" class="fixed inset-0 z-[9999] bg-[#080c14]/95 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl space-y-6">
-      <div class="text-center space-y-2">
-        <img 
-          src="https://res.cloudinary.com/dzw4kv0ue/image/upload/v1790793900/Gemini_Generated_Image_gdybgigdybgigdyb_zrkzey.jpg" 
-          alt="MoveScreen Logo" 
-          class="h-16 w-auto mx-auto rounded-xl border border-slate-700 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
-        />
-        <h2 class="text-2xl font-black text-white tracking-wide">Área do Cliente</h2>
-        <p class="text-xs text-slate-400">Digite sua senha de acesso para visualizar sua frota.</p>
-      </div>
-
-      <form onsubmit="realizarLogin(event)" class="space-y-4">
-        <div>
-          <label class="text-xs font-mono text-slate-400 block mb-1">Senha de Acesso</label>
-          <div class="relative">
-            <input 
-              type="password" 
-              id="input-password" 
-              placeholder="••••••••" 
-              required
-              class="w-full bg-slate-950 border border-slate-700 text-emerald-400 font-mono text-sm rounded-xl pl-4 pr-11 py-3 outline-none focus:border-emerald-500"
-            />
-            <button 
-              type="button" 
-              onclick="toggleSenhaVisibility()" 
-              class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-400 transition"
-              title="Mostrar/Ocultar Senha"
-            >
-              <i id="eye-icon" class="fa-solid fa-eye"></i>
-            </button>
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
+      {/* Header */}
+      <header className="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="text-2xl font-black tracking-wider text-blue-500">
+            MOVE<span className="text-white">SCREEN</span>
           </div>
-        </div>
-        
-        <p id="login-error" class="text-xs text-red-400 hidden text-center font-mono">Senha incorreta ou cliente inativo.</p>
-
-        <button 
-          type="submit" 
-          class="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-xs uppercase tracking-wider py-3.5 rounded-xl transition duration-300 shadow-lg shadow-emerald-500/20"
-        >
-          Acessar Painel
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- CONTEÚDO PRINCIPAL DA LANDING PAGE -->
-  <div id="app-content" class="hidden">
-    <header class="border-b border-slate-800/80 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto px-4 h-24 flex items-center justify-between gap-4">
-        <div class="flex items-center gap-4">
-          <img 
-            src="https://res.cloudinary.com/dzw4kv0ue/image/upload/v1790793900/Gemini_Generated_Image_gdybgigdybgigdyb_zrkzey.jpg" 
-            alt="MoveScreen Logo" 
-            class="h-14 sm:h-16 w-auto object-contain rounded-xl border border-slate-700/60 shadow-[0_0_20px_rgba(16,185,129,0.25)]"
-          />
-          <div>
-            <h1 id="header-cliente-nome" class="text-xl font-black tracking-wide text-white">MoveScreen</h1>
-            <p class="text-xs text-emerald-400 font-mono font-semibold">Telemetria em Tempo Real</p>
-          </div>
-        </div>
-
-        <button onclick="logout()" class="text-xs font-mono text-slate-400 hover:text-red-400 transition bg-slate-950 px-3.5 py-2 rounded-xl border border-slate-800">
-          <i class="fa-solid fa-right-from-bracket mr-1"></i> Sair
-        </button>
-      </div>
-    </header>
-
-    <main class="max-w-7xl mx-auto px-4 py-8 space-y-6">
-      
-      <!-- PAINEL DE FILTRO DE DATA POR PERÍODO (RANGE) -->
-      <section class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 bg-slate-900/80 p-6 rounded-3xl border border-slate-800 shadow-xl backdrop-blur">
-        <div>
-          <span class="text-emerald-400 font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-1.5">
-            <i class="fa-solid fa-satellite-dish"></i> Frota Ativa
-          </span>
-          <h2 class="text-2xl font-black text-white mt-1">Histórico de Localizações</h2>
-        </div>
-
-        <!-- CONTROLES DO RANGE DE DATA -->
-        <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto bg-slate-950 p-3 rounded-2xl border border-slate-800">
-          
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-calendar-day text-emerald-400 text-xs"></i>
-            <label for="filter-date-start" class="text-xs font-mono text-slate-400">De:</label>
-            <input 
-              type="date" 
-              id="filter-date-start" 
-              onchange="filtrarPorPeriodo()" 
-              class="bg-slate-900 border border-slate-700 text-emerald-400 font-mono text-xs rounded-xl px-3 py-2 outline-none focus:border-emerald-500 cursor-pointer"
-            />
-          </div>
-
-          <div class="flex items-center gap-2">
-            <label for="filter-date-end" class="text-xs font-mono text-slate-400">Até:</label>
-            <input 
-              type="date" 
-              id="filter-date-end" 
-              onchange="filtrarPorPeriodo()" 
-              class="bg-slate-900 border border-slate-700 text-emerald-400 font-mono text-xs rounded-xl px-3 py-2 outline-none focus:border-emerald-500 cursor-pointer"
-            />
-          </div>
-
-          <button 
-            onclick="limparFiltroDatas()" 
-            class="text-xs font-mono text-slate-400 hover:text-emerald-400 transition bg-slate-900 px-3 py-2 rounded-xl border border-slate-700/80"
-            title="Limpar Filtro e Exibir Todos os Registros"
+          <a 
+            href={whatsappUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-lg transition-all shadow-lg shadow-blue-600/30 text-sm"
           >
-            <i class="fa-solid fa-rotate-left mr-1"></i> Limpar
-          </button>
-
+            Falar com Consultor
+          </a>
         </div>
-      </section>
+      </header>
 
-      <section class="rounded-3xl overflow-hidden border border-slate-800 shadow-2xl relative">
-        <div id="map" class="w-full z-10"></div>
-      </section>
-
-      <!-- TABELA DE REGISTROS -->
-      <section class="bg-slate-900/80 rounded-3xl border border-slate-800 p-6 md:p-8 shadow-2xl space-y-4">
-        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
-          <div>
-            <h3 class="text-lg font-black text-white flex items-center gap-2">
-              <i class="fa-solid fa-location-dot text-emerald-400"></i> Localizações Detectadas
-            </h3>
-            <p class="text-xs text-slate-400 mt-0.5">Clique em qualquer registro abaixo para focar a posição no mapa.</p>
-          </div>
-          <span id="total-registros-badge" class="px-3.5 py-1.5 bg-slate-950 text-emerald-400 font-mono text-xs rounded-full border border-slate-800">
-            0 registros
+      {/* Hero Section */}
+      <section className="max-w-6xl mx-auto px-4 py-20 text-center md:text-left grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <span className="inline-block bg-blue-950 text-blue-400 font-semibold text-xs px-3 py-1.5 rounded-full border border-blue-800/50 mb-4">
+            🚀 Mídia DOOH em Carros de Aplicativo em Recife
           </span>
+          <h1 className="text-4xl md:text-6xl font-black leading-tight mb-6">
+            Sua Marca na Tela de <span className="text-blue-500">Quem Decide.</span>
+          </h1>
+          <p className="text-slate-400 text-lg mb-8 leading-relaxed">
+            Esqueça panfletos no lixo ou anúncios pulados no Instagram. Coloque sua empresa em telas interativas de 10 polegadas diante de passageiros durante 18 minutos de viagem.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <a 
+              href={whatsappUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-blue-600 hover:bg-blue-500 text-white text-center font-black py-4 px-8 rounded-xl text-lg shadow-xl shadow-blue-600/25 transition-all"
+            >
+              Anunciar por R$ 200/mês
+            </a>
+            <a 
+              href="#planos" 
+              className="border border-slate-700 hover:border-slate-500 text-center font-bold py-4 px-8 rounded-xl text-lg transition-all"
+            >
+              Ver Planos e Cotas
+            </a>
+          </div>
         </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs font-mono">
-            <thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
-              <tr>
-                <th class="py-3.5 px-4">Pino</th>
-                <th class="py-3.5 px-4">Data / Hora Local</th>
-                <th class="py-3.5 px-4">Endereço / Logradouro</th>
-                <th class="py-3.5 px-4">Latitude</th>
-                <th class="py-3.5 px-4">Longitude</th>
-              </tr>
-            </thead>
-            <tbody id="table-body" class="divide-y divide-slate-800/60 text-slate-300">
-            </tbody>
-          </table>
+        <div className="relative">
+          <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-30"></div>
+          <div className="relative bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center">
+            <div className="bg-slate-950 rounded-xl p-8 border border-slate-800">
+              <div className="text-blue-500 text-5xl mb-4">📱</div>
+              <p className="text-sm uppercase tracking-widest text-slate-500 mb-2 font-bold">Experiência de Bordo</p>
+              <h3 className="text-2xl font-bold text-white mb-2">Atenção Cativa & Sem Distrações</h3>
+              <p className="text-slate-400 text-sm">
+                Exibição contínua em vídeo master HD + QR Code direto para o seu WhatsApp ou Instagram.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
-    </main>
-  </div>
 
-  <footer class="border-t border-slate-800/80 bg-[#060910] py-6 px-4 text-center text-xs font-mono text-slate-500">
-    MoveScreen DOOH Telemetry Engine &copy; 2026
-  </footer>
+      {/* Diferenciais / Comparativo */}
+      <section className="bg-slate-900/50 py-16 border-y border-slate-800">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-3xl font-black text-center mb-12">Por que o MoveScreen funciona tanto?</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-slate-900 p-6 rounded-xl border border-slate-800">
+              <div className="text-3xl mb-4">🎯</div>
+              <h3 className="text-xl font-bold mb-2">0% de Rejeição</h3>
+              <p className="text-slate-400 text-sm">
+                Diferente das redes sociais onde o cliente pula o anúncio em 2 segundos, no tablet a visualização é natural e contínua.
+              </p>
+            </div>
+            <div className="bg-slate-900 p-6 rounded-xl border border-slate-800">
+              <div className="text-3xl mb-4">⚡</div>
+              <h3 className="text-xl font-bold mb-2">Ação Imediata via QR Code</h3>
+              <p className="text-slate-400 text-sm">
+                O passageiro escaneia a tela e entra direto em contato com a sua empresa, pegando cupons, cardápios ou agendamentos.
+              </p>
+            </div>
+            <div className="bg-slate-900 p-6 rounded-xl border border-slate-800">
+              <div className="text-3xl mb-4">📊</div>
+              <h3 className="text-xl font-bold mb-2">Telemetria & Auditoria</h3>
+              <p className="text-slate-400 text-sm">
+                Nossos veículos contam com sistema de auditoria e monitoramento de execução para garantir que sua campanha esteja sempre rodando.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-  <script>
-    const todosDispositivos = [{"id_cliente":"tst1","cliente_nome":"Cliente","cliente_senha":"move1910","device_id":"TB001","pino_identificador":"mv01","latitude_atual":-8.1414668,"longitude_atual":-34.9359996,"recorded_at":"2026-10-20T09:23:43.886","total_pontos":357,"historico_rota":[{"latitude":-8.1414668,"longitude":-34.9359996,"recorded_at":"2026-10-20T09:23:43.886"},{"latitude":-8.1414668,"longitude":-34.9359996,"recorded_at":"2026-10-20T09:23:43.886"},{"latitude":-8.1414668,"longitude":-34.9359996,"recorded_at":"2026-10-20T09:23:43.886"},{"latitude":-8.1414435,"longitude":-34.9359693,"recorded_at":"2026-10-20T09:20:41.61"},{"latitude":-8.1414435,"longitude":-34.9359693,"recorded_at":"2026-10-20T09:20:41.61"},{"latitude":-8.1414435,"longitude":-34.9359693,"recorded_at":"2026-10-20T09:20:41.61"},{"latitude":-8.1414421,"longitude":-34.9359683,"recorded_at":"2026-10-20T09:17:39.409"},{"latitude":-8.1414421,"longitude":-34.9359683,"recorded_at":"2026-10-20T09:17:39.409"},{"latitude":-8.1414421,"longitude":-34.9359683,"recorded_at":"2026-10-20T09:17:39.409"},{"latitude":-8.1414599,"longitude":-34.9359946,"recorded_at":"2026-10-20T09:14:37.186"},{"latitude":-8.1414599,"longitude":-34.9359946,"recorded_at":"2026-10-20T09:14:37.186"},{"latitude":-8.1414599,"longitude":-34.9359946,"recorded_at":"2026-10-20T09:14:37.186"},{"latitude":-8.1414725,"longitude":-34.9359958,"recorded_at":"2026-10-20T09:11:34.941"},{"latitude":-8.1414725,"longitude":-34.9359958,"recorded_at":"2026-10-20T09:11:34.941"},{"latitude":-8.1414725,"longitude":-34.9359958,"recorded_at":"2026-10-20T09:11:34.941"},{"latitude":-8.1414692,"longitude":-34.935993,"recorded_at":"2026-10-20T09:08:32.755"},{"latitude":-8.1414692,"longitude":-34.935993,"recorded_at":"2026-10-20T09:08:32.755"},{"latitude":-8.1414692,"longitude":-34.935993,"recorded_at":"2026-10-20T09:08:32.755"},{"latitude":-8.1414336,"longitude":-34.9359621,"recorded_at":"2026-10-20T09:05:30.475"},{"latitude":-8.1414336,"longitude":-34.9359621,"recorded_at":"2026-10-20T09:05:30.475"},{"latitude":-8.1414336,"longitude":-34.9359621,"recorded_at":"2026-10-20T09:05:30.475"},{"latitude":-8.1414703,"longitude":-34.9359917,"recorded_at":"2026-10-20T09:02:28.463"},{"latitude":-8.1414703,"longitude":-34.9359917,"recorded_at":"2026-10-20T09:02:28.463"},{"latitude":-8.1414703,"longitude":-34.9359917,"recorded_at":"2026-10-20T09:02:28.463"},{"latitude":-8.1414674,"longitude":-34.9360075,"recorded_at":"2026-10-20T08:59:27.412"},{"latitude":-8.1414674,"longitude":-34.9360075,"recorded_at":"2026-10-20T08:59:27.412"},{"latitude":-8.1414674,"longitude":-34.9360075,"recorded_at":"2026-10-20T08:59:27.412"},{"latitude":-8.1414776,"longitude":-34.9359891,"recorded_at":"2026-10-20T08:58:12.445"},{"latitude":-8.1414776,"longitude":-34.9359891,"recorded_at":"2026-10-20T08:58:12.445"},{"latitude":-8.1414776,"longitude":-34.9359891,"recorded_at":"2026-10-20T08:58:12.445"},{"latitude":-8.1414863,"longitude":-34.935989,"recorded_at":"2026-10-20T08:55:26.1"},{"latitude":-8.1414863,"longitude":-34.935989,"recorded_at":"2026-10-20T08:55:26.1"},{"latitude":-8.1414863,"longitude":-34.935989,"recorded_at":"2026-10-20T08:55:26.1"},{"latitude":-8.1414887,"longitude":-34.9359585,"recorded_at":"2026-10-20T08:52:23.902"},{"latitude":-8.1414887,"longitude":-34.9359585,"recorded_at":"2026-10-20T08:52:23.902"},{"latitude":-8.1414887,"longitude":-34.9359585,"recorded_at":"2026-10-20T08:52:23.902"},{"latitude":-8.141444,"longitude":-34.9359489,"recorded_at":"2026-10-20T08:49:21.647"},{"latitude":-8.141444,"longitude":-34.9359489,"recorded_at":"2026-10-20T08:49:21.647"},{"latitude":-8.141444,"longitude":-34.9359489,"recorded_at":"2026-10-20T08:49:21.647"},{"latitude":-8.141435,"longitude":-34.9359564,"recorded_at":"2026-10-20T08:46:19.453"},{"latitude":-8.141435,"longitude":-34.9359564,"recorded_at":"2026-10-20T08:46:19.453"},{"latitude":-8.141435,"longitude":-34.9359564,"recorded_at":"2026-10-20T08:46:19.453"},{"latitude":-8.1414607,"longitude":-34.9359516,"recorded_at":"2026-10-20T08:43:17.25"},{"latitude":-8.1414607,"longitude":-34.9359516,"recorded_at":"2026-10-20T08:43:17.25"},{"latitude":-8.1414607,"longitude":-34.9359516,"recorded_at":"2026-10-20T08:43:17.25"},{"latitude":-8.1414727,"longitude":-34.9359817,"recorded_at":"2026-10-20T08:40:15.062"},{"latitude":-8.1414727,"longitude":-34.9359817,"recorded_at":"2026-10-20T08:40:15.062"},{"latitude":-8.1414727,"longitude":-34.9359817,"recorded_at":"2026-10-20T08:40:15.062"},{"latitude":-8.141484,"longitude":-34.9359867,"recorded_at":"2026-10-20T08:37:12.832"},{"latitude":-8.141484,"longitude":-34.9359867,"recorded_at":"2026-10-20T08:37:12.832"},{"latitude":-8.141484,"longitude":-34.9359867,"recorded_at":"2026-10-20T08:37:12.832"},{"latitude":-8.1414724,"longitude":-34.9359952,"recorded_at":"2026-10-20T08:34:10.617"},{"latitude":-8.1414724,"longitude":-34.9359952,"recorded_at":"2026-10-20T08:34:10.617"},{"latitude":-8.1414724,"longitude":-34.9359952,"recorded_at":"2026-10-20T08:34:10.617"},{"latitude":-8.1414677,"longitude":-34.9360083,"recorded_at":"2026-10-20T08:31:08.314"},{"latitude":-8.1414677,"longitude":-34.9360083,"recorded_at":"2026-10-20T08:31:08.314"},{"latitude":-8.1414677,"longitude":-34.9360083,"recorded_at":"2026-10-20T08:31:08.314"},{"latitude":-8.1414728,"longitude":-34.9360043,"recorded_at":"2026-10-20T08:28:06.089"},{"latitude":-8.1414728,"longitude":-34.9360043,"recorded_at":"2026-10-20T08:28:06.089"},{"latitude":-8.1414728,"longitude":-34.9360043,"recorded_at":"2026-10-20T08:28:06.089"},{"latitude":-8.1414635,"longitude":-34.9359919,"recorded_at":"2026-10-20T08:25:03.88"},{"latitude":-8.1414635,"longitude":-34.9359919,"recorded_at":"2026-10-20T08:25:03.88"},{"latitude":-8.1414635,"longitude":-34.9359919,"recorded_at":"2026-10-20T08:25:03.88"},{"latitude":-8.1414666,"longitude":-34.9359938,"recorded_at":"2026-10-20T08:22:01.613"},{"latitude":-8.1414666,"longitude":-34.9359938,"recorded_at":"2026-10-20T08:22:01.613"},{"latitude":-8.1414666,"longitude":-34.9359938,"recorded_at":"2026-10-20T08:22:01.613"},{"latitude":-8.1414731,"longitude":-34.9359914,"recorded_at":"2026-10-20T08:18:59.311"},{"latitude":-8.1414731,"longitude":-34.9359914,"recorded_at":"2026-10-20T08:18:59.311"},{"latitude":-8.1414731,"longitude":-34.9359914,"recorded_at":"2026-10-20T08:18:59.311"},{"latitude":-8.1414791,"longitude":-34.9359823,"recorded_at":"2026-10-20T08:15:57.373"},{"latitude":-8.1414791,"longitude":-34.9359823,"recorded_at":"2026-10-20T08:15:57.373"},{"latitude":-8.1414791,"longitude":-34.9359823,"recorded_at":"2026-10-20T08:15:57.373"},{"latitude":-8.1414563,"longitude":-34.9359657,"recorded_at":"2026-10-20T08:12:54.341"},{"latitude":-8.1414563,"longitude":-34.9359657,"recorded_at":"2026-10-20T08:12:54.341"},{"latitude":-8.1414563,"longitude":-34.9359657,"recorded_at":"2026-10-20T08:12:54.341"},{"latitude":-8.1414832,"longitude":-34.9359735,"recorded_at":"2026-10-20T08:09:52.143"},{"latitude":-8.1414832,"longitude":-34.9359735,"recorded_at":"2026-10-20T08:09:52.143"},{"latitude":-8.1414832,"longitude":-34.9359735,"recorded_at":"2026-10-20T08:09:52.143"},{"latitude":-8.141478,"longitude":-34.935972,"recorded_at":"2026-10-20T08:06:50.024"},{"latitude":-8.141478,"longitude":-34.935972,"recorded_at":"2026-10-20T08:06:50.024"},{"latitude":-8.141478,"longitude":-34.935972,"recorded_at":"2026-10-20T08:06:50.024"},{"latitude":-8.1414963,"longitude":-34.9359508,"recorded_at":"2026-10-20T08:03:47.693"},{"latitude":-8.1414963,"longitude":-34.9359508,"recorded_at":"2026-10-20T08:03:47.693"},{"latitude":-8.1414963,"longitude":-34.9359508,"recorded_at":"2026-10-20T08:03:47.693"},{"latitude":-8.1414868,"longitude":-34.9359808,"recorded_at":"2026-10-20T08:00:45.591"},{"latitude":-8.1414868,"longitude":-34.9359808,"recorded_at":"2026-10-20T08:00:45.591"},{"latitude":-8.1414868,"longitude":-34.9359808,"recorded_at":"2026-10-20T08:00:45.591"},{"latitude":-8.1414757,"longitude":-34.9359852,"recorded_at":"2026-10-20T07:57:43.486"},{"latitude":-8.1414757,"longitude":-34.9359852,"recorded_at":"2026-10-20T07:57:43.486"},{"latitude":-8.1414757,"longitude":-34.9359852,"recorded_at":"2026-10-20T07:57:43.486"},{"latitude":-8.1414368,"longitude":-34.9359556,"recorded_at":"2026-10-20T07:54:41.441"},{"latitude":-8.1414368,"longitude":-34.9359556,"recorded_at":"2026-10-20T07:54:41.441"},{"latitude":-8.1414368,"longitude":-34.9359556,"recorded_at":"2026-10-20T07:54:41.441"},{"latitude":-8.1414898,"longitude":-34.9359875,"recorded_at":"2026-10-19T14:57:27.464"},{"latitude":-8.1414898,"longitude":-34.9359875,"recorded_at":"2026-10-19T14:57:27.464"},{"latitude":-8.1414898,"longitude":-34.9359875,"recorded_at":"2026-10-19T14:57:27.464"},{"latitude":-8.1414888,"longitude":-34.9359547,"recorded_at":"2026-10-19T14:54:25.164"},{"latitude":-8.1414888,"longitude":-34.9359547,"recorded_at":"2026-10-19T14:54:25.164"},{"latitude":-8.1414888,"longitude":-34.9359547,"recorded_at":"2026-10-19T14:54:25.164"},{"latitude":-8.1414781,"longitude":-34.9359742,"recorded_at":"2026-10-19T14:51:22.959"},{"latitude":-8.1414781,"longitude":-34.9359742,"recorded_at":"2026-10-19T14:51:22.959"},{"latitude":-8.1414781,"longitude":-34.9359742,"recorded_at":"2026-10-19T14:51:22.959"},{"latitude":-8.1414834,"longitude":-34.9359798,"recorded_at":"2026-10-19T14:48:20.737"},{"latitude":-8.1414834,"longitude":-34.9359798,"recorded_at":"2026-10-19T14:48:20.737"},{"latitude":-8.1414834,"longitude":-34.9359798,"recorded_at":"2026-10-19T14:48:20.737"},{"latitude":-8.1414761,"longitude":-34.9359822,"recorded_at":"2026-10-19T14:45:18.405"},{"latitude":-8.1414761,"longitude":-34.9359822,"recorded_at":"2026-10-19T14:45:18.405"},{"latitude":-8.1414761,"longitude":-34.9359822,"recorded_at":"2026-10-19T14:45:18.405"},{"latitude":-8.1414884,"longitude":-34.9359579,"recorded_at":"2026-10-19T14:42:16.166"},{"latitude":-8.1414884,"longitude":-34.9359579,"recorded_at":"2026-10-19T14:42:16.166"},{"latitude":-8.1414884,"longitude":-34.9359579,"recorded_at":"2026-10-19T14:42:16.166"},{"latitude":-8.1414811,"longitude":-34.9359866,"recorded_at":"2026-10-19T14:39:13.936"},{"latitude":-8.1414811,"longitude":-34.9359866,"recorded_at":"2026-10-19T14:39:13.936"},{"latitude":-8.1414811,"longitude":-34.9359866,"recorded_at":"2026-10-19T14:39:13.936"},{"latitude":-8.1414757,"longitude":-34.9359787,"recorded_at":"2026-10-19T14:36:11.659"},{"latitude":-8.1414757,"longitude":-34.9359787,"recorded_at":"2026-10-19T14:36:11.659"},{"latitude":-8.1414757,"longitude":-34.9359787,"recorded_at":"2026-10-19T14:36:11.659"},{"latitude":-8.1414813,"longitude":-34.9359795,"recorded_at":"2026-10-19T14:33:09.43"},{"latitude":-8.1414813,"longitude":-34.9359795,"recorded_at":"2026-10-19T14:33:09.43"},{"latitude":-8.1414813,"longitude":-34.9359795,"recorded_at":"2026-10-19T14:33:09.43"},{"latitude":-8.1414898,"longitude":-34.935983,"recorded_at":"2026-10-19T14:30:07.202"},{"latitude":-8.1414898,"longitude":-34.935983,"recorded_at":"2026-10-19T14:30:07.202"},{"latitude":-8.1414898,"longitude":-34.935983,"recorded_at":"2026-10-19T14:30:07.202"},{"latitude":-8.1414736,"longitude":-34.935985,"recorded_at":"2026-10-19T14:27:04.923"},{"latitude":-8.1414736,"longitude":-34.935985,"recorded_at":"2026-10-19T14:27:04.923"},{"latitude":-8.1414736,"longitude":-34.935985,"recorded_at":"2026-10-19T14:27:04.923"},{"latitude":-8.1414751,"longitude":-34.9359934,"recorded_at":"2026-10-19T14:24:02.714"},{"latitude":-8.1414751,"longitude":-34.9359934,"recorded_at":"2026-10-19T14:24:02.714"},{"latitude":-8.1414751,"longitude":-34.9359934,"recorded_at":"2026-10-19T14:24:02.714"},{"latitude":-8.1414827,"longitude":-34.935991,"recorded_at":"2026-10-19T14:21:00.493"},{"latitude":-8.1414827,"longitude":-34.935991,"recorded_at":"2026-10-19T14:21:00.493"},{"latitude":-8.1414827,"longitude":-34.935991,"recorded_at":"2026-10-19T14:21:00.493"},{"latitude":-8.1414699,"longitude":-34.9359859,"recorded_at":"2026-10-19T14:17:58.237"},{"latitude":-8.1414699,"longitude":-34.9359859,"recorded_at":"2026-10-19T14:17:58.237"},{"latitude":-8.1414699,"longitude":-34.9359859,"recorded_at":"2026-10-19T14:17:58.237"},{"latitude":-8.14147,"longitude":-34.9359829,"recorded_at":"2026-10-19T14:14:56.009"},{"latitude":-8.14147,"longitude":-34.9359829,"recorded_at":"2026-10-19T14:14:56.009"},{"latitude":-8.14147,"longitude":-34.9359829,"recorded_at":"2026-10-19T14:14:56.009"},{"latitude":-8.1414742,"longitude":-34.9359763,"recorded_at":"2026-10-19T14:11:53.787"},{"latitude":-8.1414742,"longitude":-34.9359763,"recorded_at":"2026-10-19T14:11:53.787"},{"latitude":-8.1414742,"longitude":-34.9359763,"recorded_at":"2026-10-19T14:11:53.787"},{"latitude":-8.1414889,"longitude":-34.9359911,"recorded_at":"2026-10-19T14:08:51.45"},{"latitude":-8.1414889,"longitude":-34.9359911,"recorded_at":"2026-10-19T14:08:51.45"},{"latitude":-8.1414889,"longitude":-34.9359911,"recorded_at":"2026-10-19T14:08:51.45"},{"latitude":-8.1414837,"longitude":-34.9359867,"recorded_at":"2026-10-19T14:05:49.287"},{"latitude":-8.1414837,"longitude":-34.9359867,"recorded_at":"2026-10-19T14:05:49.287"},{"latitude":-8.1414837,"longitude":-34.9359867,"recorded_at":"2026-10-19T14:05:49.287"},{"latitude":-8.1414772,"longitude":-34.9359759,"recorded_at":"2026-10-19T14:02:47.096"},{"latitude":-8.1414772,"longitude":-34.9359759,"recorded_at":"2026-10-19T14:02:47.096"},{"latitude":-8.1414772,"longitude":-34.9359759,"recorded_at":"2026-10-19T14:02:47.096"},{"latitude":-8.1414809,"longitude":-34.9359777,"recorded_at":"2026-10-19T13:59:44.822"},{"latitude":-8.1414809,"longitude":-34.9359777,"recorded_at":"2026-10-19T13:59:44.822"},{"latitude":-8.1414809,"longitude":-34.9359777,"recorded_at":"2026-10-19T13:59:44.822"},{"latitude":-8.1414753,"longitude":-34.9359884,"recorded_at":"2026-10-19T13:56:42.568"},{"latitude":-8.1414753,"longitude":-34.9359884,"recorded_at":"2026-10-19T13:56:42.568"},{"latitude":-8.1414753,"longitude":-34.9359884,"recorded_at":"2026-10-19T13:56:42.568"},{"latitude":-8.1414839,"longitude":-34.9359852,"recorded_at":"2026-10-19T13:53:40.327"},{"latitude":-8.1414839,"longitude":-34.9359852,"recorded_at":"2026-10-19T13:53:40.327"},{"latitude":-8.1414839,"longitude":-34.9359852,"recorded_at":"2026-10-19T13:53:40.327"},{"latitude":-8.1414767,"longitude":-34.9359844,"recorded_at":"2026-10-19T13:50:38.179"},{"latitude":-8.1414767,"longitude":-34.9359844,"recorded_at":"2026-10-19T13:50:38.179"},{"latitude":-8.1414767,"longitude":-34.9359844,"recorded_at":"2026-10-19T13:50:38.179"},{"latitude":-8.1414856,"longitude":-34.9359898,"recorded_at":"2026-10-19T13:47:35.865"},{"latitude":-8.1414856,"longitude":-34.9359898,"recorded_at":"2026-10-19T13:47:35.865"},{"latitude":-8.1414856,"longitude":-34.9359898,"recorded_at":"2026-10-19T13:47:35.865"},{"latitude":-8.1414766,"longitude":-34.9359791,"recorded_at":"2026-10-19T13:44:33.615"},{"latitude":-8.1414766,"longitude":-34.9359791,"recorded_at":"2026-10-19T13:44:33.615"},{"latitude":-8.1414766,"longitude":-34.9359791,"recorded_at":"2026-10-19T13:44:33.615"},{"latitude":-8.14148,"longitude":-34.9359885,"recorded_at":"2026-10-19T13:41:31.411"},{"latitude":-8.14148,"longitude":-34.9359885,"recorded_at":"2026-10-19T13:41:31.411"},{"latitude":-8.14148,"longitude":-34.9359885,"recorded_at":"2026-10-19T13:41:31.411"},{"latitude":-8.1414875,"longitude":-34.9359525,"recorded_at":"2026-10-19T13:38:29.17"},{"latitude":-8.1414875,"longitude":-34.9359525,"recorded_at":"2026-10-19T13:38:29.17"},{"latitude":-8.1414875,"longitude":-34.9359525,"recorded_at":"2026-10-19T13:38:29.17"},{"latitude":-8.1414839,"longitude":-34.9359785,"recorded_at":"2026-10-19T13:35:26.91"},{"latitude":-8.1414839,"longitude":-34.9359785,"recorded_at":"2026-10-19T13:35:26.91"},{"latitude":-8.1414839,"longitude":-34.9359785,"recorded_at":"2026-10-19T13:35:26.91"},{"latitude":-8.1414844,"longitude":-34.9359885,"recorded_at":"2026-10-19T13:32:24.608"},{"latitude":-8.1414844,"longitude":-34.9359885,"recorded_at":"2026-10-19T13:32:24.608"},{"latitude":-8.1414844,"longitude":-34.9359885,"recorded_at":"2026-10-19T13:32:24.608"},{"latitude":-8.1414764,"longitude":-34.9359825,"recorded_at":"2026-10-19T13:29:22.407"},{"latitude":-8.1414764,"longitude":-34.9359825,"recorded_at":"2026-10-19T13:29:22.407"},{"latitude":-8.1414764,"longitude":-34.9359825,"recorded_at":"2026-10-19T13:29:22.407"},{"latitude":-8.1414834,"longitude":-34.9359821,"recorded_at":"2026-10-19T13:26:20.198"},{"latitude":-8.1414834,"longitude":-34.9359821,"recorded_at":"2026-10-19T13:26:20.198"},{"latitude":-8.1414834,"longitude":-34.9359821,"recorded_at":"2026-10-19T13:26:20.198"},{"latitude":-8.1414727,"longitude":-34.93599,"recorded_at":"2026-10-19T13:23:17.992"},{"latitude":-8.1414727,"longitude":-34.93599,"recorded_at":"2026-10-19T13:23:17.992"},{"latitude":-8.1414727,"longitude":-34.93599,"recorded_at":"2026-10-19T13:23:17.992"},{"latitude":-8.1414733,"longitude":-34.9359855,"recorded_at":"2026-10-19T13:20:15.708"},{"latitude":-8.1414733,"longitude":-34.9359855,"recorded_at":"2026-10-19T13:20:15.708"},{"latitude":-8.1414733,"longitude":-34.9359855,"recorded_at":"2026-10-19T13:20:15.708"},{"latitude":-8.1414836,"longitude":-34.9359807,"recorded_at":"2026-10-19T13:17:13.461"},{"latitude":-8.1414836,"longitude":-34.9359807,"recorded_at":"2026-10-19T13:17:13.461"},{"latitude":-8.1414836,"longitude":-34.9359807,"recorded_at":"2026-10-19T13:17:13.461"},{"latitude":-8.1414758,"longitude":-34.9359844,"recorded_at":"2026-10-19T13:14:11.192"},{"latitude":-8.1414758,"longitude":-34.9359844,"recorded_at":"2026-10-19T13:14:11.192"},{"latitude":-8.1414758,"longitude":-34.9359844,"recorded_at":"2026-10-19T13:14:11.192"},{"latitude":-8.1414737,"longitude":-34.935979,"recorded_at":"2026-10-19T13:11:09.021"},{"latitude":-8.1414737,"longitude":-34.935979,"recorded_at":"2026-10-19T13:11:09.021"},{"latitude":-8.1414737,"longitude":-34.935979,"recorded_at":"2026-10-19T13:11:09.021"},{"latitude":-8.1414841,"longitude":-34.9359869,"recorded_at":"2026-10-19T13:08:06.841"},{"latitude":-8.1414841,"longitude":-34.9359869,"recorded_at":"2026-10-19T13:08:06.841"},{"latitude":-8.1414841,"longitude":-34.9359869,"recorded_at":"2026-10-19T13:08:06.841"},{"latitude":-8.1414848,"longitude":-34.9359771,"recorded_at":"2026-10-19T13:05:04.573"},{"latitude":-8.1414848,"longitude":-34.9359771,"recorded_at":"2026-10-19T13:05:04.573"},{"latitude":-8.1414848,"longitude":-34.9359771,"recorded_at":"2026-10-19T13:05:04.573"},{"latitude":-8.1414819,"longitude":-34.9359907,"recorded_at":"2026-10-19T13:02:02.318"},{"latitude":-8.1414819,"longitude":-34.9359907,"recorded_at":"2026-10-19T13:02:02.318"},{"latitude":-8.1414819,"longitude":-34.9359907,"recorded_at":"2026-10-19T13:02:02.318"},{"latitude":-8.1414808,"longitude":-34.9359969,"recorded_at":"2026-10-19T12:59:00.069"},{"latitude":-8.1414808,"longitude":-34.9359969,"recorded_at":"2026-10-19T12:59:00.069"},{"latitude":-8.1414808,"longitude":-34.9359969,"recorded_at":"2026-10-19T12:59:00.069"},{"latitude":-8.1414783,"longitude":-34.9359816,"recorded_at":"2026-10-19T12:55:57.773"},{"latitude":-8.1414783,"longitude":-34.9359816,"recorded_at":"2026-10-19T12:55:57.773"},{"latitude":-8.1414783,"longitude":-34.9359816,"recorded_at":"2026-10-19T12:55:57.773"},{"latitude":-8.1414836,"longitude":-34.9359814,"recorded_at":"2026-10-19T12:52:55.547"},{"latitude":-8.1414836,"longitude":-34.9359814,"recorded_at":"2026-10-19T12:52:55.547"},{"latitude":-8.1414836,"longitude":-34.9359814,"recorded_at":"2026-10-19T12:52:55.547"},{"latitude":-8.1414808,"longitude":-34.9359757,"recorded_at":"2026-10-19T12:49:53.311"},{"latitude":-8.1414808,"longitude":-34.9359757,"recorded_at":"2026-10-19T12:49:53.311"},{"latitude":-8.1414808,"longitude":-34.9359757,"recorded_at":"2026-10-19T12:49:53.311"},{"latitude":-8.1414789,"longitude":-34.9359833,"recorded_at":"2026-10-19T12:46:51.02"},{"latitude":-8.1414789,"longitude":-34.9359833,"recorded_at":"2026-10-19T12:46:51.02"},{"latitude":-8.1414789,"longitude":-34.9359833,"recorded_at":"2026-10-19T12:46:51.02"},{"latitude":-8.1414847,"longitude":-34.9359743,"recorded_at":"2026-10-19T12:43:48.827"},{"latitude":-8.1414847,"longitude":-34.9359743,"recorded_at":"2026-10-19T12:43:48.827"},{"latitude":-8.1414847,"longitude":-34.9359743,"recorded_at":"2026-10-19T12:43:48.827"},{"latitude":-8.1414826,"longitude":-34.9359836,"recorded_at":"2026-10-19T12:40:46.576"},{"latitude":-8.1414826,"longitude":-34.9359836,"recorded_at":"2026-10-19T12:40:46.576"},{"latitude":-8.1414826,"longitude":-34.9359836,"recorded_at":"2026-10-19T12:40:46.576"},{"latitude":-8.1414854,"longitude":-34.9359671,"recorded_at":"2026-10-19T12:37:44.318"},{"latitude":-8.1414854,"longitude":-34.9359671,"recorded_at":"2026-10-19T12:37:44.318"},{"latitude":-8.1414854,"longitude":-34.9359671,"recorded_at":"2026-10-19T12:37:44.318"},{"latitude":-8.1414834,"longitude":-34.9359742,"recorded_at":"2026-10-19T12:34:42.046"},{"latitude":-8.1414834,"longitude":-34.9359742,"recorded_at":"2026-10-19T12:34:42.046"},{"latitude":-8.1414834,"longitude":-34.9359742,"recorded_at":"2026-10-19T12:34:42.046"},{"latitude":-8.141481,"longitude":-34.9359703,"recorded_at":"2026-10-19T12:31:39.818"},{"latitude":-8.141481,"longitude":-34.9359703,"recorded_at":"2026-10-19T12:31:39.818"},{"latitude":-8.141481,"longitude":-34.9359703,"recorded_at":"2026-10-19T12:31:39.818"},{"latitude":-8.1414768,"longitude":-34.9359841,"recorded_at":"2026-10-19T12:28:37.556"},{"latitude":-8.1414768,"longitude":-34.9359841,"recorded_at":"2026-10-19T12:28:37.556"},{"latitude":-8.1414768,"longitude":-34.9359841,"recorded_at":"2026-10-19T12:28:37.556"},{"latitude":-8.1414728,"longitude":-34.9359773,"recorded_at":"2026-10-19T12:25:35.327"},{"latitude":-8.1414728,"longitude":-34.9359773,"recorded_at":"2026-10-19T12:25:35.327"},{"latitude":-8.1414728,"longitude":-34.9359773,"recorded_at":"2026-10-19T12:25:35.327"},{"latitude":-8.1414782,"longitude":-34.935977,"recorded_at":"2026-10-19T12:22:33.167"},{"latitude":-8.1414782,"longitude":-34.935977,"recorded_at":"2026-10-19T12:22:33.167"},{"latitude":-8.1414782,"longitude":-34.935977,"recorded_at":"2026-10-19T12:22:33.167"},{"latitude":-8.1414792,"longitude":-34.935952,"recorded_at":"2026-10-19T12:19:30.911"},{"latitude":-8.1414792,"longitude":-34.935952,"recorded_at":"2026-10-19T12:19:30.911"},{"latitude":-8.1414792,"longitude":-34.935952,"recorded_at":"2026-10-19T12:19:30.911"},{"latitude":-8.1414775,"longitude":-34.9359784,"recorded_at":"2026-10-19T12:16:28.656"},{"latitude":-8.1414775,"longitude":-34.9359784,"recorded_at":"2026-10-19T12:16:28.656"},{"latitude":-8.1414775,"longitude":-34.9359784,"recorded_at":"2026-10-19T12:16:28.656"},{"latitude":-8.141488,"longitude":-34.9359763,"recorded_at":"2026-10-19T12:13:26.395"},{"latitude":-8.141488,"longitude":-34.9359763,"recorded_at":"2026-10-19T12:13:26.395"},{"latitude":-8.141488,"longitude":-34.9359763,"recorded_at":"2026-10-19T12:13:26.395"},{"latitude":-8.141485,"longitude":-34.9359782,"recorded_at":"2026-10-19T12:10:24.219"},{"latitude":-8.141485,"longitude":-34.9359782,"recorded_at":"2026-10-19T12:10:24.219"},{"latitude":-8.141485,"longitude":-34.9359782,"recorded_at":"2026-10-19T12:10:24.219"},{"latitude":-8.1414454,"longitude":-34.9359516,"recorded_at":"2026-10-19T12:07:21.94"},{"latitude":-8.1414454,"longitude":-34.9359516,"recorded_at":"2026-10-19T12:07:21.94"},{"latitude":-8.1414454,"longitude":-34.9359516,"recorded_at":"2026-10-19T12:07:21.94"},{"latitude":-8.1414392,"longitude":-34.9359558,"recorded_at":"2026-10-19T12:04:19.724"},{"latitude":-8.1414392,"longitude":-34.9359558,"recorded_at":"2026-10-19T12:04:19.724"},{"latitude":-8.1414392,"longitude":-34.9359558,"recorded_at":"2026-10-19T12:04:19.724"},{"latitude":-8.1414414,"longitude":-34.9359582,"recorded_at":"2026-10-19T12:01:17.468"},{"latitude":-8.1414414,"longitude":-34.9359582,"recorded_at":"2026-10-19T12:01:17.468"},{"latitude":-8.1414414,"longitude":-34.9359582,"recorded_at":"2026-10-19T12:01:17.468"},{"latitude":-8.1414377,"longitude":-34.9359546,"recorded_at":"2026-10-19T11:58:15.165"},{"latitude":-8.1414377,"longitude":-34.9359546,"recorded_at":"2026-10-19T11:58:15.165"},{"latitude":-8.1414377,"longitude":-34.9359546,"recorded_at":"2026-10-19T11:58:15.165"},{"latitude":-8.141437,"longitude":-34.9359561,"recorded_at":"2026-10-19T11:55:12.853"},{"latitude":-8.141437,"longitude":-34.9359561,"recorded_at":"2026-10-19T11:55:12.853"},{"latitude":-8.141437,"longitude":-34.9359561,"recorded_at":"2026-10-19T11:55:12.853"},{"latitude":-8.1414446,"longitude":-34.9359583,"recorded_at":"2026-10-19T11:52:10.602"},{"latitude":-8.1414446,"longitude":-34.9359583,"recorded_at":"2026-10-19T11:52:10.602"},{"latitude":-8.1414446,"longitude":-34.9359583,"recorded_at":"2026-10-19T11:52:10.602"},{"latitude":-8.1414514,"longitude":-34.9359643,"recorded_at":"2026-10-19T11:49:08.371"},{"latitude":-8.1414514,"longitude":-34.9359643,"recorded_at":"2026-10-19T11:49:08.371"},{"latitude":-8.1414514,"longitude":-34.9359643,"recorded_at":"2026-10-19T11:49:08.371"},{"latitude":-8.1414493,"longitude":-34.93596,"recorded_at":"2026-10-19T11:46:06.094"},{"latitude":-8.1414493,"longitude":-34.93596,"recorded_at":"2026-10-19T11:46:06.094"},{"latitude":-8.1414493,"longitude":-34.93596,"recorded_at":"2026-10-19T11:46:06.094"},{"latitude":-8.1414529,"longitude":-34.935962,"recorded_at":"2026-10-19T11:43:03.649"},{"latitude":-8.1414529,"longitude":-34.935962,"recorded_at":"2026-10-19T11:43:03.649"},{"latitude":-8.1414529,"longitude":-34.935962,"recorded_at":"2026-10-19T11:43:03.649"},{"latitude":-8.14145,"longitude":-34.9359646,"recorded_at":"2026-10-19T11:40:01.382"},{"latitude":-8.14145,"longitude":-34.9359646,"recorded_at":"2026-10-19T11:40:01.382"},{"latitude":-8.14145,"longitude":-34.9359646,"recorded_at":"2026-10-19T11:40:01.382"},{"latitude":-8.1414444,"longitude":-34.9359634,"recorded_at":"2026-10-19T11:36:59.093"},{"latitude":-8.1414444,"longitude":-34.9359634,"recorded_at":"2026-10-19T11:36:59.093"},{"latitude":-8.1414444,"longitude":-34.9359634,"recorded_at":"2026-10-19T11:36:59.093"},{"latitude":-8.1414833,"longitude":-34.935996,"recorded_at":"2026-10-19T11:33:56.917"},{"latitude":-8.1414833,"longitude":-34.935996,"recorded_at":"2026-10-19T11:33:56.917"},{"latitude":-8.1414833,"longitude":-34.935996,"recorded_at":"2026-10-19T11:33:56.917"},{"latitude":-8.1414784,"longitude":-34.9359848,"recorded_at":"2026-10-19T11:30:54.624"},{"latitude":-8.1414784,"longitude":-34.9359848,"recorded_at":"2026-10-19T11:30:54.624"},{"latitude":-8.1414784,"longitude":-34.9359848,"recorded_at":"2026-10-19T11:30:54.624"},{"latitude":-8.141486,"longitude":-34.9359881,"recorded_at":"2026-10-19T11:27:52.384"},{"latitude":-8.141486,"longitude":-34.9359881,"recorded_at":"2026-10-19T11:27:52.384"},{"latitude":-8.141486,"longitude":-34.9359881,"recorded_at":"2026-10-19T11:27:52.384"},{"latitude":-8.1414675,"longitude":-34.9359913,"recorded_at":"2026-10-19T11:24:50.183"},{"latitude":-8.1414675,"longitude":-34.9359913,"recorded_at":"2026-10-19T11:24:50.183"},{"latitude":-8.1414675,"longitude":-34.9359913,"recorded_at":"2026-10-19T11:24:50.183"},{"latitude":-8.1414686,"longitude":-34.935982,"recorded_at":"2026-10-19T11:21:47.956"},{"latitude":-8.1414686,"longitude":-34.935982,"recorded_at":"2026-10-19T11:21:47.956"},{"latitude":-8.1414686,"longitude":-34.935982,"recorded_at":"2026-10-19T11:21:47.956"},{"latitude":-8.1414731,"longitude":-34.9359888,"recorded_at":"2026-10-19T11:18:45.735"},{"latitude":-8.1414731,"longitude":-34.9359888,"recorded_at":"2026-10-19T11:18:45.735"},{"latitude":-8.1414731,"longitude":-34.9359888,"recorded_at":"2026-10-19T11:18:45.735"},{"latitude":-8.1414799,"longitude":-34.9360026,"recorded_at":"2026-10-19T11:15:43.479"},{"latitude":-8.1414799,"longitude":-34.9360026,"recorded_at":"2026-10-19T11:15:43.479"},{"latitude":-8.1414799,"longitude":-34.9360026,"recorded_at":"2026-10-19T11:15:43.479"},{"latitude":-8.141471,"longitude":-34.9359898,"recorded_at":"2026-10-19T11:12:41.266"},{"latitude":-8.141471,"longitude":-34.9359898,"recorded_at":"2026-10-19T11:12:41.266"},{"latitude":-8.141471,"longitude":-34.9359898,"recorded_at":"2026-10-19T11:12:41.266"},{"latitude":-8.1414811,"longitude":-34.9359835,"recorded_at":"2026-10-19T11:09:38.986"},{"latitude":-8.1414811,"longitude":-34.9359835,"recorded_at":"2026-10-19T11:09:38.986"},{"latitude":-8.1414811,"longitude":-34.9359835,"recorded_at":"2026-10-19T11:09:38.986"},{"latitude":-8.1414709,"longitude":-34.9359888,"recorded_at":"2026-10-19T11:06:36.751"},{"latitude":-8.1414709,"longitude":-34.9359888,"recorded_at":"2026-10-19T11:06:36.751"},{"latitude":-8.1414709,"longitude":-34.9359888,"recorded_at":"2026-10-19T11:06:36.751"},{"latitude":-8.1414788,"longitude":-34.9359894,"recorded_at":"2026-10-19T11:03:34.485"},{"latitude":-8.1414788,"longitude":-34.9359894,"recorded_at":"2026-10-19T11:03:34.485"},{"latitude":-8.1414788,"longitude":-34.9359894,"recorded_at":"2026-10-19T11:03:34.485"},{"latitude":-8.1414807,"longitude":-34.9359873,"recorded_at":"2026-10-19T11:00:32.259"},{"latitude":-8.1414807,"longitude":-34.9359873,"recorded_at":"2026-10-19T11:00:32.259"},{"latitude":-8.1414807,"longitude":-34.9359873,"recorded_at":"2026-10-19T11:00:32.259"},{"latitude":-8.1414736,"longitude":-34.9359926,"recorded_at":"2026-10-19T10:57:29.958"},{"latitude":-8.1414736,"longitude":-34.9359926,"recorded_at":"2026-10-19T10:57:29.958"},{"latitude":-8.1414736,"longitude":-34.9359926,"recorded_at":"2026-10-19T10:57:29.958"},{"latitude":-8.1414844,"longitude":-34.9359833,"recorded_at":"2026-10-19T10:54:27.739"},{"latitude":-8.1414844,"longitude":-34.9359833,"recorded_at":"2026-10-19T10:54:27.739"},{"latitude":-8.1414844,"longitude":-34.9359833,"recorded_at":"2026-10-19T10:54:27.739"},{"latitude":-8.1414646,"longitude":-34.935996,"recorded_at":"2026-10-19T10:51:25.461"},{"latitude":-8.1414646,"longitude":-34.935996,"recorded_at":"2026-10-19T10:51:25.461"},{"latitude":-8.1414646,"longitude":-34.935996,"recorded_at":"2026-10-19T10:51:25.461"},{"latitude":-8.1414667,"longitude":-34.9359965,"recorded_at":"2026-10-19T10:48:23.249"},{"latitude":-8.1414667,"longitude":-34.9359965,"recorded_at":"2026-10-19T10:48:23.249"},{"latitude":-8.1414667,"longitude":-34.9359965,"recorded_at":"2026-10-19T10:48:23.249"},{"latitude":-8.1414753,"longitude":-34.9359914,"recorded_at":"2026-10-19T10:45:20.976"},{"latitude":-8.1414753,"longitude":-34.9359914,"recorded_at":"2026-10-19T10:45:20.976"},{"latitude":-8.1414753,"longitude":-34.9359914,"recorded_at":"2026-10-19T10:45:20.976"},{"latitude":-8.1414828,"longitude":-34.9359751,"recorded_at":"2026-10-19T10:42:18.713"},{"latitude":-8.1414828,"longitude":-34.9359751,"recorded_at":"2026-10-19T10:42:18.713"},{"latitude":-8.1414828,"longitude":-34.9359751,"recorded_at":"2026-10-19T10:42:18.713"},{"latitude":-8.1414848,"longitude":-34.9359835,"recorded_at":"2026-10-19T10:39:16.519"},{"latitude":-8.1414848,"longitude":-34.9359835,"recorded_at":"2026-10-19T10:39:16.519"},{"latitude":-8.1414848,"longitude":-34.9359835,"recorded_at":"2026-10-19T10:39:16.519"},{"latitude":-8.1414828,"longitude":-34.9359873,"recorded_at":"2026-10-19T10:36:14.27"},{"latitude":-8.1414828,"longitude":-34.9359873,"recorded_at":"2026-10-19T10:36:14.27"},{"latitude":-8.1414828,"longitude":-34.9359873,"recorded_at":"2026-10-19T10:36:14.27"},{"latitude":-8.1414498,"longitude":-34.9359576,"recorded_at":"2026-10-19T10:33:15.065"},{"latitude":-8.1414498,"longitude":-34.9359576,"recorded_at":"2026-10-19T10:33:15.065"},{"latitude":-8.1414498,"longitude":-34.9359576,"recorded_at":"2026-10-19T10:33:15.065"}]},{"id_cliente":"tst2","cliente_nome":"Cliente","cliente_senha":"move345","device_id":"TESTE2","pino_identificador":"mv02","latitude_atual":null,"longitude_atual":null,"recorded_at":null,"total_pontos":0,"historico_rota":[]}];
-    let clienteAutenticado = null;
-    let map = null;
-    let markersGroup = null;
-    const cacheEndereco = {};
-    const mapaMarcadores = new Map();
+      {/* Planos e Cotas */}
+      <section id="planos" className="max-w-6xl mx-auto px-4 py-20">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-black mb-4">Investimento Acessível para Qualquer Negócio</h2>
+          <p className="text-slate-400">Anuncie com o custo diário menor que o de um cafezinho.</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* Cota 10s */}
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-950 px-3 py-1 rounded-full">Iniciante</span>
+              <h3 className="text-2xl font-bold mt-4 mb-2">Cota 10 Segundos</h3>
+              <div className="text-4xl font-black my-4">R$ 200<span className="text-sm font-normal text-slate-400">/mês por veículo</span></div>
+              <p className="text-xs text-slate-500 mb-6 font-semibold">Equivalente a apenas R$ 6,66 por dia</p>
+              <ul className="text-slate-300 text-sm space-y-3 mb-8">
+                <li>✅ Inclusão no Vídeo Master HD</li>
+                <li>✅ Criação de Arte e QR Code</li>
+                <li>✅ Veiculação diária garantida</li>
+              </ul>
+            </div>
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="block text-center bg-slate-800 hover:bg-slate-700 font-bold py-3 rounded-lg text-sm transition-all">
+              Reservar Cota 10s
+            </a>
+          </div>
 
-    async function obterNomeRua(lat, lng, elementId) {
-      const key = `${lat.toFixed(4)},${lng.toFixed(4)}`;
-      if (cacheEndereco[key]) {
-        const el = document.getElementById(elementId);
-        if (el) el.innerText = cacheEndereco[key];
-        return;
-      }
+          {/* Cota 20s (Destaque) */}
+          <div className="bg-slate-900 border-2 border-blue-500 rounded-2xl p-8 flex flex-col justify-between relative shadow-2xl shadow-blue-500/10">
+            <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white font-bold text-xs uppercase px-4 py-1 rounded-full">Mais Vendido</span>
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-950 px-3 py-1 rounded-full">Performance</span>
+              <h3 className="text-2xl font-bold mt-4 mb-2">Cota 20 Segundos</h3>
+              <div className="text-4xl font-black my-4">R$ 400<span className="text-sm font-normal text-slate-400">/mês por veículo</span></div>
+              <p className="text-xs text-slate-500 mb-6 font-semibold">O dobro de tempo de tela para reforço de marca</p>
+              <ul className="text-slate-300 text-sm space-y-3 mb-8">
+                <li>✅ Dobro de tempo de exposição</li>
+                <li>✅ Inclusão no Vídeo Master HD</li>
+                <li>✅ QR Code e chamada promocional</li>
+                <li>✅ Relatório de veiculação</li>
+              </ul>
+            </div>
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="block text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg text-sm transition-all">
+              Reservar Cota 20s
+            </a>
+          </div>
 
-      try {
-        const resp = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
-        const data = await resp.json();
-        
-        if (data && data.address) {
-          const rua = data.address.road || data.address.pedestrian || data.address.suburb || "Via não mapeada";
-          const bairro = data.address.suburb || data.address.neighbourhood || "";
-          const enderecoFormatado = bairro ? `${rua}, ${bairro}` : rua;
-          
-          cacheEndereco[key] = enderecoFormatado;
-          const el = document.getElementById(elementId);
-          if (el) el.innerText = enderecoFormatado;
-        } else {
-          const el = document.getElementById(elementId);
-          if (el) el.innerText = "Endereço não identificado";
-        }
-      } catch (err) {
-        const el = document.getElementById(elementId);
-        if (el) el.innerText = "Coordenada registrada";
-      }
-    }
+          {/* Cota 30s */}
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-950 px-3 py-1 rounded-full">Exclusivo</span>
+              <h3 className="text-2xl font-bold mt-4 mb-2">Cota 30 Segundos</h3>
+              <div className="text-4xl font-black my-4">R$ 800<span className="text-sm font-normal text-slate-400">/mês por veículo</span></div>
+              <p className="text-xs text-slate-500 mb-6 font-semibold">Domínio total do intervalo comercial</p>
+              <ul className="text-slate-300 text-sm space-y-3 mb-8">
+                <li>✅ Exposição comercial completa</li>
+                <li>✅ Apresentação detalhada de produtos</li>
+                <li>✅ Suporte e criação prioritários</li>
+              </ul>
+            </div>
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="block text-center bg-slate-800 hover:bg-slate-700 font-bold py-3 rounded-lg text-sm transition-all">
+              Reservar Cota 30s
+            </a>
+          </div>
+        </div>
+      </section>
 
-    function toggleSenhaVisibility() {
-      const passwordInput = document.getElementById("input-password");
-      const eyeIcon = document.getElementById("eye-icon");
-      if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-        eyeIcon.classList.remove("fa-eye");
-        eyeIcon.classList.add("fa-eye-slash");
-      } else {
-        passwordInput.type = "password";
-        eyeIcon.classList.remove("fa-eye-slash");
-        eyeIcon.classList.add("fa-eye");
-      }
-    }
-
-    function realizarLogin(event) {
-      event.preventDefault();
-      const senhaInput = String(document.getElementById("input-password").value).trim().toLowerCase();
-      const erroEl = document.getElementById("login-error");
-
-      const dispositivosDoCliente = todosDispositivos.filter(d => 
-        d.cliente_senha && String(d.cliente_senha).trim().toLowerCase() === senhaInput
-      );
-
-      if (dispositivosDoCliente.length > 0) {
-        clienteAutenticado = dispositivosDoCliente;
-        document.getElementById("login-modal").classList.add("hidden");
-        document.getElementById("app-content").classList.remove("hidden");
-        document.getElementById("header-cliente-nome").innerText = dispositivosDoCliente[0].cliente_nome;
-
-        inicializarMapa();
-        renderizar(null, null);
-      } else {
-        erroEl.classList.remove("hidden");
-      }
-    }
-
-    function inicializarMapa() {
-      if (!map) {
-        map = L.map('map', { zoomControl: true }).setView([-8.1414, -34.9360], 14);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
-        markersGroup = L.layerGroup().addTo(map);
-      }
-    }
-
-    function focarPontoNoMapa(lat, lng, markerKey, trElement) {
-      document.querySelectorAll('#table-body tr').forEach(tr => tr.classList.remove('linha-selecionada'));
-      trElement.classList.add('linha-selecionada');
-
-      if (map) {
-        map.flyTo([lat, lng], 17, { duration: 1.2 });
-        const marker = mapaMarcadores.get(markerKey);
-        if (marker) {
-          setTimeout(() => {
-            marker.openPopup();
-          }, 600);
-        }
-      }
-    }
-
-    function renderizar(dataInicio, dataFim) {
-      if (!clienteAutenticado) return;
-
-      markersGroup.clearLayers();
-      mapaMarcadores.clear();
-      const tableBody = document.getElementById("table-body");
-      tableBody.innerHTML = "";
-
-      let totalExibidos = 0;
-      let todosPontosBounds = [];
-
-      clienteAutenticado.forEach(dev => {
-        let pontos = dev.historico_rota || [];
-
-        // Ordenação DECRESCENTE (mais recente primeiro)
-        pontos.sort((a, b) => new Date(b.recorded_at) - new Date(a.recorded_at));
-
-        // LÓGICA DO FILTRO POR PERÍODO (RANGE DE DATA)
-        if (dataInicio || dataFim) {
-          pontos = pontos.filter(p => {
-            if (!p.recorded_at) return false;
-            // Pega apenas a data YYYY-MM-DD
-            const dataPonto = p.recorded_at.split("T")[0];
-
-            if (dataInicio && dataFim) {
-              return dataPonto >= dataInicio && dataPonto <= dataFim;
-            } else if (dataInicio) {
-              return dataPonto >= dataInicio;
-            } else if (dataFim) {
-              return dataPonto <= dataFim;
-            }
-            return true;
-          });
-        }
-
-        if (pontos.length === 0) return;
-
-        const latLngs = pontos.map(p => [p.latitude, p.longitude]);
-        todosPontosBounds = todosPontosBounds.concat(latLngs);
-
-        L.polyline(latLngs, { color: '#10b981', weight: 4, opacity: 0.85 }).addTo(markersGroup);
-
-        pontos.forEach((p, idx) => {
-          totalExibidos++;
-          const pinoLabel = dev.pino_identificador || `#${idx + 1}`;
-          const addressCellId = `addr-${totalExibidos}`;
-          const markerKey = `marker-${totalExibidos}`;
-
-          const pinoIcon = L.divIcon({
-            className: 'custom-pino-icon',
-            html: pinoLabel,
-            iconSize: [28, 28],
-            iconAnchor: [14, 14]
-          });
-
-          const marker = L.marker([p.latitude, p.longitude], { icon: pinoIcon })
-            .bindPopup(`
-              <div style="font-family: sans-serif;">
-                <b style="color: #10b981; font-size: 13px;">Tablet: ${pinoLabel}</b><br>
-                <span style="font-size: 11px; color: #cbd5e1;">Data: ${new Date(p.recorded_at).toLocaleString('pt-BR')}</span><br>
-                <span style="font-size: 10px; color: #94a3b8; font-family: monospace;">Lat: ${p.latitude} | Lng: ${p.longitude}</span>
-              </div>
-            `)
-            .addTo(markersGroup);
-
-          mapaMarcadores.set(markerKey, marker);
-
-          const tr = document.createElement('tr');
-          tr.className = "hover:bg-slate-800/60 transition cursor-pointer border-b border-slate-800/40";
-          tr.onclick = () => focarPontoNoMapa(p.latitude, p.longitude, markerKey, tr);
-
-          tr.innerHTML = `
-            <td class="py-3 px-4 font-bold text-emerald-400 font-mono">${pinoLabel}</td>
-            <td class="py-3 px-4 text-slate-200 font-mono">${new Date(p.recorded_at).toLocaleString('pt-BR')}</td>
-            <td class="py-3 px-4 font-sans text-slate-200" id="${addressCellId}">
-              <span class="text-slate-500 animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Identificando rua...</span>
-            </td>
-            <td class="py-3 px-4 text-slate-400 font-mono">${p.latitude}</td>
-            <td class="py-3 px-4 text-slate-400 font-mono">${p.longitude}</td>
-          `;
-
-          tableBody.appendChild(tr);
-
-          setTimeout(() => {
-            obterNomeRua(p.latitude, p.longitude, addressCellId);
-          }, idx * 200);
-        });
-      });
-
-      document.getElementById("total-registros-badge").innerText = `${totalExibidos} registros`;
-
-      if (todosPontosBounds.length > 0) {
-        map.fitBounds(todosPontosBounds, { padding: [30, 30] });
-      }
-    }
-
-    function filtrarPorPeriodo() {
-      const startVal = document.getElementById("filter-date-start").value;
-      const endVal = document.getElementById("filter-date-end").value;
-      renderizar(startVal, endVal);
-    }
-
-    function limparFiltroDatas() {
-      document.getElementById("filter-date-start").value = "";
-      document.getElementById("filter-date-end").value = "";
-      renderizar(null, null);
-    }
-
-    function logout() {
-      location.reload();
-    }
-  </script>
-</body>
-</html>
+      {/* Footer / LGPD */}
+      <footer className="border-t border-slate-800 py-8 bg-slate-950 text-slate-500 text-xs text-center">
+        <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div>
+            © {new Date().getFullYear()} MoveScreen — Mídia Digital em Carros de Aplicativo. Todos os direitos reservados.
+          </div>
+          <div className="flex gap-6">
+            <a href="/privacidade" className="hover:text-slate-300 underline">
+              Política de Privacidade & LGPD
+            </a>
+            <a href="https://www.instagram.com/movescreen.pe" target="_blank" rel="noopener noreferrer" className="hover:text-slate-300">
+              Instagram @movescreen.pe
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
