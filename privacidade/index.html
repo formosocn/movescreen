@@ -1,1 +1,28 @@
+import React from 'react';
 
+export default function Privacidade() {
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-300 font-sans p-8 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold text-white mb-6">Política de Privacidade — MoveScreen</h1>
+      <p className="mb-4 text-sm">Última atualização: Outubro de 2026</p>
+      
+      <section className="space-y-4 text-sm leading-relaxed">
+        <h2 className="text-xl font-bold text-white mt-6">1. Coleta de Dados</h2>
+        <p>A MoveScreen coleta dados pessoais estritamente necessários quando o usuário interage via QR Code nos tablets instalados em veículos de aplicativo ou entra em contato direto via WhatsApp. Os dados coletados incluem: nome público do perfil do WhatsApp, número de telefone e nome da empresa solicitada.</p>
+
+        <h2 className="text-xl font-bold text-white mt-6">2. Finalidade do Tratamento</h2>
+        <p>Os dados são tratados para: (a) Entrega imediata de cupons, cards e informações do anunciante solicitado; (b) Apresentação de propostas comerciais de mídia digital aos anunciantes interessados; (c) Envio pontual de ofertas e atualizações relativas ao MoveScreen.</p>
+
+        <h2 className="text-xl font-bold text-white mt-6">3. Seus Direitos (Opt-Out)</h2>
+        <p>Em conformidade com a LGPD (Lei nº 13.709/2018), o titular dos dados pode solicitar a exclusão do seu número e informações das nossas listas de comunicação a qualquer momento, bastando responder "SAIR" na conversa do WhatsApp ou entrar em contato pelo e-mail oficial.</p>
+
+        <h2 className="text-xl font-bold text-white mt-6">4. Compartilhamento</h2>
+        <p>A MoveScreen não vende e não comercializa dados pessoais de passageiros ou usuários com terceiros não autorizados.</p>
+      </section>
+      
+      <div className="mt-8 pt-6 border-t border-slate-800 text-xs text-slate-500">
+        <a href="/" className="text-blue-400 underline">← Voltar para o site principal</a>
+      </div>
+    </div>
+  );
+}
