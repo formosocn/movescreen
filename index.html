@@ -1,182 +1,182 @@
-import React from 'react';
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoveScreen — Sua Marca na Tela de Quem Decide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 500: '#3b82f6', 600: '#2563eb' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen">
 
-export default function MoveScreenLanding() {
-  const whatsappUrl = "https://wa.me/5581981330331?text=Olá!%20Vim%20pelo%20site%20da%20MoveScreen%20e%20quero%20saber%20mais%20sobre%20as%20cotas%20de%20anúncio.";
-
-  return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
-      {/* Header */}
-      <header className="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="text-2xl font-black tracking-wider text-blue-500">
-            MOVE<span className="text-white">SCREEN</span>
-          </div>
-          <a 
-            href={whatsappUrl} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-lg transition-all shadow-lg shadow-blue-600/30 text-sm"
-          >
-            Falar com Consultor
-          </a>
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <section className="max-w-6xl mx-auto px-4 py-20 text-center md:text-left grid md:grid-cols-2 gap-12 items-center">
-        <div>
-          <span className="inline-block bg-blue-950 text-blue-400 font-semibold text-xs px-3 py-1.5 rounded-full border border-blue-800/50 mb-4">
-            🚀 Mídia DOOH em Carros de Aplicativo em Recife
-          </span>
-          <h1 className="text-4xl md:text-6xl font-black leading-tight mb-6">
-            Sua Marca na Tela de <span className="text-blue-500">Quem Decide.</span>
-          </h1>
-          <p className="text-slate-400 text-lg mb-8 leading-relaxed">
-            Esqueça panfletos no lixo ou anúncios pulados no Instagram. Coloque sua empresa em telas interativas de 10 polegadas diante de passageiros durante 18 minutos de viagem.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <a 
-              href={whatsappUrl} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="bg-blue-600 hover:bg-blue-500 text-white text-center font-black py-4 px-8 rounded-xl text-lg shadow-xl shadow-blue-600/25 transition-all"
-            >
-              Anunciar por R$ 200/mês
-            </a>
-            <a 
-              href="#planos" 
-              className="border border-slate-700 hover:border-slate-500 text-center font-bold py-4 px-8 rounded-xl text-lg transition-all"
-            >
-              Ver Planos e Cotas
-            </a>
-          </div>
-        </div>
-        <div className="relative">
-          <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-30"></div>
-          <div className="relative bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center">
-            <div className="bg-slate-950 rounded-xl p-8 border border-slate-800">
-              <div className="text-blue-500 text-5xl mb-4">📱</div>
-              <p className="text-sm uppercase tracking-widest text-slate-500 mb-2 font-bold">Experiência de Bordo</p>
-              <h3 className="text-2xl font-bold text-white mb-2">Atenção Cativa & Sem Distrações</h3>
-              <p className="text-slate-400 text-sm">
-                Exibição contínua em vídeo master HD + QR Code direto para o seu WhatsApp ou Instagram.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Diferenciais / Comparativo */}
-      <section className="bg-slate-900/50 py-16 border-y border-slate-800">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-black text-center mb-12">Por que o MoveScreen funciona tanto?</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-slate-900 p-6 rounded-xl border border-slate-800">
-              <div className="text-3xl mb-4">🎯</div>
-              <h3 className="text-xl font-bold mb-2">0% de Rejeição</h3>
-              <p className="text-slate-400 text-sm">
-                Diferente das redes sociais onde o cliente pula o anúncio em 2 segundos, no tablet a visualização é natural e contínua.
-              </p>
-            </div>
-            <div className="bg-slate-900 p-6 rounded-xl border border-slate-800">
-              <div className="text-3xl mb-4">⚡</div>
-              <h3 className="text-xl font-bold mb-2">Ação Imediata via QR Code</h3>
-              <p className="text-slate-400 text-sm">
-                O passageiro escaneia a tela e entra direto em contato com a sua empresa, pegando cupons, cardápios ou agendamentos.
-              </p>
-            </div>
-            <div className="bg-slate-900 p-6 rounded-xl border border-slate-800">
-              <div className="text-3xl mb-4">📊</div>
-              <h3 className="text-xl font-bold mb-2">Telemetria & Auditoria</h3>
-              <p className="text-slate-400 text-sm">
-                Nossos veículos contam com sistema de auditoria e monitoramento de execução para garantir que sua campanha esteja sempre rodando.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Planos e Cotas */}
-      <section id="planos" className="max-w-6xl mx-auto px-4 py-20">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-black mb-4">Investimento Acessível para Qualquer Negócio</h2>
-          <p className="text-slate-400">Anuncie com o custo diário menor que o de um cafezinho.</p>
-        </div>
-        <div className="grid md:grid-cols-3 gap-8">
-          {/* Cota 10s */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-950 px-3 py-1 rounded-full">Iniciante</span>
-              <h3 className="text-2xl font-bold mt-4 mb-2">Cota 10 Segundos</h3>
-              <div className="text-4xl font-black my-4">R$ 200<span className="text-sm font-normal text-slate-400">/mês por veículo</span></div>
-              <p className="text-xs text-slate-500 mb-6 font-semibold">Equivalente a apenas R$ 6,66 por dia</p>
-              <ul className="text-slate-300 text-sm space-y-3 mb-8">
-                <li>✅ Inclusão no Vídeo Master HD</li>
-                <li>✅ Criação de Arte e QR Code</li>
-                <li>✅ Veiculação diária garantida</li>
-              </ul>
-            </div>
-            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="block text-center bg-slate-800 hover:bg-slate-700 font-bold py-3 rounded-lg text-sm transition-all">
-              Reservar Cota 10s
-            </a>
-          </div>
-
-          {/* Cota 20s (Destaque) */}
-          <div className="bg-slate-900 border-2 border-blue-500 rounded-2xl p-8 flex flex-col justify-between relative shadow-2xl shadow-blue-500/10">
-            <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white font-bold text-xs uppercase px-4 py-1 rounded-full">Mais Vendido</span>
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-950 px-3 py-1 rounded-full">Performance</span>
-              <h3 className="text-2xl font-bold mt-4 mb-2">Cota 20 Segundos</h3>
-              <div className="text-4xl font-black my-4">R$ 400<span className="text-sm font-normal text-slate-400">/mês por veículo</span></div>
-              <p className="text-xs text-slate-500 mb-6 font-semibold">O dobro de tempo de tela para reforço de marca</p>
-              <ul className="text-slate-300 text-sm space-y-3 mb-8">
-                <li>✅ Dobro de tempo de exposição</li>
-                <li>✅ Inclusão no Vídeo Master HD</li>
-                <li>✅ QR Code e chamada promocional</li>
-                <li>✅ Relatório de veiculação</li>
-              </ul>
-            </div>
-            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="block text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg text-sm transition-all">
-              Reservar Cota 20s
-            </a>
-          </div>
-
-          {/* Cota 30s */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-950 px-3 py-1 rounded-full">Exclusivo</span>
-              <h3 className="text-2xl font-bold mt-4 mb-2">Cota 30 Segundos</h3>
-              <div className="text-4xl font-black my-4">R$ 800<span className="text-sm font-normal text-slate-400">/mês por veículo</span></div>
-              <p className="text-xs text-slate-500 mb-6 font-semibold">Domínio total do intervalo comercial</p>
-              <ul className="text-slate-300 text-sm space-y-3 mb-8">
-                <li>✅ Exposição comercial completa</li>
-                <li>✅ Apresentação detalhada de produtos</li>
-                <li>✅ Suporte e criação prioritários</li>
-              </ul>
-            </div>
-            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="block text-center bg-slate-800 hover:bg-slate-700 font-bold py-3 rounded-lg text-sm transition-all">
-              Reservar Cota 30s
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer / LGPD */}
-      <footer className="border-t border-slate-800 py-8 bg-slate-950 text-slate-500 text-xs text-center">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div>
-            © {new Date().getFullYear()} MoveScreen — Mídia Digital em Carros de Aplicativo. Todos os direitos reservados.
-          </div>
-          <div className="flex gap-6">
-            <a href="/privacidade" className="hover:text-slate-300 underline">
-              Política de Privacidade & LGPD
-            </a>
-            <a href="https://www.instagram.com/movescreen.pe" target="_blank" rel="noopener noreferrer" className="hover:text-slate-300">
-              Instagram @movescreen.pe
-            </a>
-          </div>
-        </div>
-      </footer>
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="text-2xl font-black tracking-wider text-blue-500">
+        MOVE<span class="text-white">SCREEN</span>
+      </div>
+      <a href="https://wa.me/5581981330331?text=Olá!%20Vim%20pelo%20site%20da%20MoveScreen%20e%20quero%20saber%20mais%20sobre%20as%20cotas." 
+         target="_blank" 
+         class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-lg transition-all shadow-lg shadow-blue-600/30 text-sm">
+        Falar com Consultor
+      </a>
     </div>
-  );
-}
+  </header>
+
+  <!-- Hero Section -->
+  <section class="max-w-6xl mx-auto px-4 py-16 md:py-24 grid md:grid-cols-2 gap-12 items-center">
+    <div>
+      <span class="inline-block bg-blue-950 text-blue-400 font-semibold text-xs px-3 py-1.5 rounded-full border border-blue-800/50 mb-4">
+        🚀 Mídia DOOH em Carros de Aplicativo em Recife
+      </span>
+      <h1 class="text-4xl md:text-6xl font-black leading-tight mb-6">
+        Sua Marca na Tela de <span class="text-blue-500">Quem Decide.</span>
+      </h1>
+      <p class="text-slate-400 text-lg mb-8 leading-relaxed">
+        Esqueça panfletos no lixo ou anúncios pulados nas redes sociais. Coloque sua empresa em tablets de 10 polegadas diante de passageiros durante 18 minutos de viagem.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a href="https://wa.me/5581981330331?text=Olá!%20Quero%20reservar%20uma%20cota%20na%20MoveScreen." 
+           target="_blank" 
+           class="bg-blue-600 hover:bg-blue-500 text-white text-center font-black py-4 px-8 rounded-xl text-lg shadow-xl shadow-blue-600/25 transition-all">
+          Anunciar por R$ 200/mês
+        </a>
+        <a href="#planos" class="border border-slate-700 hover:border-slate-500 text-center font-bold py-4 px-8 rounded-xl text-lg transition-all">
+          Ver Planos e Cotas
+        </a>
+      </div>
+    </div>
+    <div class="relative">
+      <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-30"></div>
+      <div class="relative bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center">
+        <div class="text-blue-500 text-6xl mb-4">📱</div>
+        <p class="text-xs uppercase tracking-widest text-slate-500 mb-2 font-bold">Experiência de Bordo</p>
+        <h3 class="text-2xl font-bold text-white mb-2">Atenção Cativa & Sem Distrações</h3>
+        <p class="text-slate-400 text-sm">
+          Exibição contínua em vídeo master HD + QR Code interativo direto para o seu WhatsApp ou Instagram.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diferenciais -->
+  <section class="bg-slate-900/50 py-16 border-y border-slate-800">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="text-3xl font-black text-center mb-12">Por que o MoveScreen funciona tanto?</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-slate-900 p-6 rounded-xl border border-slate-800">
+          <div class="text-3xl mb-4">🎯</div>
+          <h3 class="text-xl font-bold mb-2">0% de Rejeição</h3>
+          <p class="text-slate-400 text-sm">
+            Diferente das redes sociais onde o cliente pula o anúncio em 2 segundos, no tablet a visualização é natural e contínua.
+          </p>
+        </div>
+        <div class="bg-slate-900 p-6 rounded-xl border border-slate-800">
+          <div class="text-3xl mb-4">⚡</div>
+          <h3 class="text-xl font-bold mb-2">Ação Imediata via QR Code</h3>
+          <p class="text-slate-400 text-sm">
+            O passageiro escaneia a tela e entra direto em contato com a sua empresa, pegando cupons, cardápios ou agendamentos.
+          </p>
+        </div>
+        <div class="bg-slate-900 p-6 rounded-xl border border-slate-800">
+          <div class="text-3xl mb-4">📊</div>
+          <h3 class="text-xl font-bold mb-2">Telemetria & Auditoria</h3>
+          <p class="text-slate-400 text-sm">
+            Nossos veículos contam com sistema de auditoria e monitoramento de execução para garantir que sua campanha esteja sempre rodando.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Planos e Cotas -->
+  <section id="planos" class="max-w-6xl mx-auto px-4 py-16">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-black mb-4">Investimento Acessível para Qualquer Negócio</h2>
+      <p class="text-slate-400">Anuncie com um custo diário menor que o de um cafezinho.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- Cota 10s -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-950 px-3 py-1 rounded-full">Iniciante</span>
+          <h3 class="text-2xl font-bold mt-4 mb-2">Cota 10 Segundos</h3>
+          <div class="text-4xl font-black my-4">R$ 200<span class="text-sm font-normal text-slate-400">/mês por veículo</span></div>
+          <p class="text-xs text-slate-500 mb-6 font-semibold">Apenas R$ 6,66 por dia</p>
+          <ul class="text-slate-300 text-sm space-y-3 mb-8">
+            <li>✅ Inclusão no Vídeo Master HD</li>
+            <li>✅ Criação de Arte e QR Code</li>
+            <li>✅ Veiculação diária garantida</li>
+          </ul>
+        </div>
+        <a href="https://wa.me/5581981330331?text=Quero%20a%20Cota%2010s" target="_blank" class="block text-center bg-slate-800 hover:bg-slate-700 font-bold py-3 rounded-lg text-sm transition-all">
+          Reservar Cota 10s
+        </a>
+      </div>
+
+      <!-- Cota 20s -->
+      <div class="bg-slate-900 border-2 border-blue-500 rounded-2xl p-8 flex flex-col justify-between relative shadow-2xl shadow-blue-500/10">
+        <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white font-bold text-xs uppercase px-4 py-1 rounded-full">Mais Vendido</span>
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-950 px-3 py-1 rounded-full">Performance</span>
+          <h3 class="text-2xl font-bold mt-4 mb-2">Cota 20 Segundos</h3>
+          <div class="text-4xl font-black my-4">R$ 400<span class="text-sm font-normal text-slate-400">/mês por veículo</span></div>
+          <p class="text-xs text-slate-500 mb-6 font-semibold">O dobro de tempo de tela</p>
+          <ul class="text-slate-300 text-sm space-y-3 mb-8">
+            <li>✅ Dobro de tempo de exposição</li>
+            <li>✅ Inclusão no Vídeo Master HD</li>
+            <li>✅ QR Code promocional</li>
+            <li>✅ Relatório de veiculação</li>
+          </ul>
+        </div>
+        <a href="https://wa.me/5581981330331?text=Quero%20a%20Cota%2020s" target="_blank" class="block text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg text-sm transition-all">
+          Reservar Cota 20s
+        </a>
+      </div>
+
+      <!-- Cota 30s -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-950 px-3 py-1 rounded-full">Exclusivo</span>
+          <h3 class="text-2xl font-bold mt-4 mb-2">Cota 30 Segundos</h3>
+          <div class="text-4xl font-black my-4">R$ 800<span class="text-sm font-normal text-slate-400">/mês por veículo</span></div>
+          <p class="text-xs text-slate-500 mb-6 font-semibold">Domínio total do intervalo</p>
+          <ul class="text-slate-300 text-sm space-y-3 mb-8">
+            <li>✅ Exposição comercial completa</li>
+            <li>✅ Apresentação detalhada de produtos</li>
+            <li>✅ Atendimento prioritário</li>
+          </ul>
+        </div>
+        <a href="https://wa.me/5581981330331?text=Quero%20a%20Cota%2030s" target="_blank" class="block text-center bg-slate-800 hover:bg-slate-700 font-bold py-3 rounded-lg text-sm transition-all">
+          Reservar Cota 30s
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 py-8 bg-slate-950 text-slate-500 text-xs text-center">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div>
+        © 2026 MoveScreen — Mídia Digital em Carros de Aplicativo.
+      </div>
+      <div class="flex gap-6">
+        <a href="/privacidade" class="hover:text-slate-300 underline">Política de Privacidade & LGPD</a>
+        <a href="https://www.instagram.com/movescreen.pe" target="_blank" class="hover:text-slate-300">Instagram @movescreen.pe</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
