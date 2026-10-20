@@ -1,28 +1,127 @@
-import React from 'react';
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Política de Privacidade & LGPD — MoveScreen</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 500: '#3b82f6', 600: '#2563eb' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between">
 
-export default function Privacidade() {
-  return (
-    <div className="min-h-screen bg-slate-950 text-slate-300 font-sans p-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-white mb-6">Política de Privacidade — MoveScreen</h1>
-      <p className="mb-4 text-sm">Última atualização: Outubro de 2026</p>
+  <!-- Header Simplificado -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="/" class="flex items-center gap-3">
+        <img 
+          src="https://res.cloudinary.com/dzw4kv0ue/image/upload/v1790793900/Gemini_Generated_Image_gdybgigdybgigdyb_zrkzey.jpg" 
+          alt="MoveScreen Logo" 
+          class="h-9 w-auto rounded-lg object-contain"
+        />
+        <div class="text-xl font-black tracking-wider text-blue-500">
+          MOVE<span class="text-white">SCREEN</span>
+        </div>
+      </a>
+      <a href="/" class="text-xs text-slate-400 hover:text-white font-semibold transition-all">
+        ← Voltar ao Site Principal
+      </a>
+    </div>
+  </header>
+
+  <!-- Conteúdo da Política de Privacidade -->
+  <main class="max-w-4xl mx-auto px-4 py-12 flex-grow">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-10 shadow-xl">
       
-      <section className="space-y-4 text-sm leading-relaxed">
-        <h2 className="text-xl font-bold text-white mt-6">1. Coleta de Dados</h2>
-        <p>A MoveScreen coleta dados pessoais estritamente necessários quando o usuário interage via QR Code nos tablets instalados em veículos de aplicativo ou entra em contato direto via WhatsApp. Os dados coletados incluem: nome público do perfil do WhatsApp, número de telefone e nome da empresa solicitada.</p>
-
-        <h2 className="text-xl font-bold text-white mt-6">2. Finalidade do Tratamento</h2>
-        <p>Os dados são tratados para: (a) Entrega imediata de cupons, cards e informações do anunciante solicitado; (b) Apresentação de propostas comerciais de mídia digital aos anunciantes interessados; (c) Envio pontual de ofertas e atualizações relativas ao MoveScreen.</p>
-
-        <h2 className="text-xl font-bold text-white mt-6">3. Seus Direitos (Opt-Out)</h2>
-        <p>Em conformidade com a LGPD (Lei nº 13.709/2018), o titular dos dados pode solicitar a exclusão do seu número e informações das nossas listas de comunicação a qualquer momento, bastando responder "SAIR" na conversa do WhatsApp ou entrar em contato pelo e-mail oficial.</p>
-
-        <h2 className="text-xl font-bold text-white mt-6">4. Compartilhamento</h2>
-        <p>A MoveScreen não vende e não comercializa dados pessoais de passageiros ou usuários com terceiros não autorizados.</p>
-      </section>
+      <span class="inline-block bg-blue-950 text-blue-400 font-semibold text-xs px-3 py-1 rounded-full border border-blue-800/50 mb-4">
+        🔒 Transparência & Conformidade LGPD
+      </span>
       
-      <div className="mt-8 pt-6 border-t border-slate-800 text-xs text-slate-500">
-        <a href="/" className="text-blue-400 underline">← Voltar para o site principal</a>
+      <h1 class="text-3xl md:text-4xl font-black text-white mb-2">Política de Privacidade</h1>
+      <p class="text-xs text-slate-500 mb-8 font-medium">Última atualização: Outubro de 2026</p>
+
+      <div class="space-y-6 text-slate-300 text-sm leading-relaxed border-t border-slate-800 pt-6">
+        
+        <section>
+          <h2 class="text-lg font-bold text-white mb-2">1. Coleta de Dados Pessoais</h2>
+          <p>
+            A <strong>MoveScreen</strong> coleta dados pessoais estritamente necessários para o atendimento e a prestação do serviço quando o usuário interage via leitura de QR Code nos tablets instalados em veículos de transporte por aplicativo ou quando entra em contato direto via WhatsApp. Os dados coletados incluem:
+          </p>
+          <ul class="list-disc list-inside mt-2 space-y-1 text-slate-400">
+            <li>Nome de perfil público do WhatsApp;</li>
+            <li>Número de telefone celular;</li>
+            <li>Identificação da empresa ou promoção consultada.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-lg font-bold text-white mb-2">2. Finalidade do Tratamento de Dados</h2>
+          <p>
+            Em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018), os dados coletados têm como finalidades exclusivas:
+          </p>
+          <ul class="list-disc list-inside mt-2 space-y-1 text-slate-400">
+            <li>Entrega imediata de cupons de desconto, cartões promocionais e contatos do anunciante solicitado;</li>
+            <li>Atendimento comercial e envio de propostas de veiculação de mídia digital para empresas interessadas;</li>
+            <li>Envio de comunicações pontuais sobre atualizações de frota, novos parceiros e benefícios do ecossistema MoveScreen.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-lg font-bold text-white mb-2">3. Direitos do Titular (Opt-Out / Remoção de Dados)</h2>
+          <p>
+            O usuário possui total controle sobre seus dados e pode solicitar a atualização, confirmação de tratamento ou exclusão imediata de seu número das nossas listas ativas a qualquer momento.
+          </p>
+          <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl mt-3 text-xs text-slate-400">
+            👉 <strong>Como solicitar o cancelamento:</strong> Basta responder com a palavra <span class="text-blue-400 font-bold">"SAIR"</span> ou <span class="text-blue-400 font-bold">"CANCELAR"</span> a qualquer momento no nosso chat automático no WhatsApp.
+          </div>
+        </section>
+
+        <section>
+          <h2 class="text-lg font-bold text-white mb-2">4. Compartilhamento e Segurança</h2>
+          <p>
+            A MoveScreen adota medidas técnicas e administrativas de segurança para proteger os dados pessoais de acessos não autorizados. Os dados não são vendidos, alugados nem repassados a terceiros para finalidades distintas das estabelecidas neste termo.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-lg font-bold text-white mb-2">5. Contato do Encarregado de Dados</h2>
+          <p>
+            Para esclarecer dúvidas sobre esta Política de Privacidade ou sobre o tratamento de seus dados, entre em contato com nossa equipe pelo e-mail oficial ou diretamente pelo WhatsApp corporativo da MoveScreen.
+          </p>
+        </section>
+
+      </div>
+
+      <div class="mt-10 pt-6 border-t border-slate-800 text-center md:text-left">
+        <a href="/" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-3 rounded-xl transition-all text-sm">
+          ← Voltar para a Página Principal
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="border-t border-slate-800 py-6 bg-slate-950 text-slate-500 text-xs text-center">
+    <div class="max-w-4xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div>
+        © 2026 MoveScreen — Mídia Digital em Carros de Aplicativo.
+      </div>
+      <div>
+        <a href="https://www.instagram.com/movescreen.pe" target="_blank" class="hover:text-slate-300">Instagram @movescreen.pe</a>
       </div>
     </div>
-  );
-}
+  </footer>
+
+</body>
+</html>
