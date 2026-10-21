@@ -1,4 +1,4 @@
-name: Deploy MoveScreen para GitHub Pages
+name: Deploy GitHub Pages
 
 on:
   push:
@@ -9,40 +9,18 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
-
 jobs:
-  build-and-deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  deploy:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout código
-        uses: actions/checkout@v4
-
-      - name: Configurar Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-
-      - name: Instalar dependências
-        run: npm ci --legacy-peer-deps
-
-      - name: Compilar projeto (Build)
-        run: npm run build
-
-      - name: Configurar Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload artefato de build
-        uses: actions/upload-pages-artifact@v3
+      - run: npm ci --legacy-peer-deps
+      - run: npm run build
+      - uses: actions/configure-pages@v4
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
-
-      - name: Deploy para GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - uses: actions/deploy-pages@v4
