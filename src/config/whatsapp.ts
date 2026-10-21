@@ -52,7 +52,7 @@ export const buildWhatsappLink = ({
 export const WHATSAPP_CONFIG = {
   phoneNumber: PHONE_NUMBERS.AI_ATTENDANT,
   displayPhone: '(81) 98133-0331',
-  contactEmail: 'contato@movescreen.com.br',
+  contactEmail: '',
   businessHours: 'Segunda a Sexta, das 08h \u00e0s 19h (Atendimento r\u00e1pido)',
   averageResponseTime: 'Geralmente responde em menos de 5 minutos',
 };
