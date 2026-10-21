@@ -12,7 +12,7 @@ interface WhatsappLinkOptions {
   useHumanTeam?: boolean; // Define se vai para a IA ou para a equipa
 }
 
-export const buildWhatsappLink = ({
+export const buildWhatsAppLink= ({
   intent,
   data,
   useHumanTeam = false,
