@@ -1,62 +1,68 @@
 /**
- * @license
- * SPDX-License-Identifier: Apache-2.0
+ * MoveScreen - Landing Page de Alta Conversão
+ * Mídia Digital DOOH em Tablets Horizontais em Carros de Aplicativo
  */
 
-import React from 'react';
-import { Navbar } from './components/Navbar';
+import React, { useState } from 'react';
+import { Header } from './components/Header';
 import { Hero } from './components/Hero';
+import { TargetAudience } from './components/TargetAudience';
+import { Benefits } from './components/Benefits';
 import { HowItWorks } from './components/HowItWorks';
-import { TabletSimulator } from './components/TabletSimulator';
-import { ComparisonSection } from './components/ComparisonSection';
-import { ImpactCalculator } from './components/ImpactCalculator';
-import { PricingPlans } from './components/PricingPlans';
-import { ProofTestimonials } from './components/ProofTestimonials';
-import { LeadDiagnosisSection } from './components/LeadDiagnosisSection';
-import { FAQ } from './components/FAQ';
+import { TabletInteractivePreview } from './components/TabletInteractivePreview';
+import { PricingCalculator } from './components/PricingCalculator';
+import { FaqSection } from './components/FaqSection';
+import { FinalCta } from './components/FinalCta';
 import { Footer } from './components/Footer';
-import { FloatingWhatsApp } from './components/FloatingWhatsApp';
+import { TrackingModal } from './components/TrackingModal';
+import { WhatsAppFloatingButton } from './components/WhatsAppFloatingButton';
 
 export default function App() {
-  return (
-    <div className="min-h-screen bg-[#060B18] text-slate-100 flex flex-col font-sans selection:bg-[#00D2FF] selection:text-[#060B18]">
-      {/* Top Bar following 1-row, 3-zone contract */}
-      <Navbar />
+  const [isTrackingModalOpen, setIsTrackingModalOpen] = useState(false);
 
+  return (
+    <div className="min-h-screen bg-[#070b14] text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
+      {/* Header with official logo, navigation, tracking trigger and primary CTA */}
+      <Header onOpenTracking={() => setIsTrackingModalOpen(true)} />
+
+      {/* Main Landing Page Content */}
       <main className="flex-grow">
-        {/* Hero Section with Value Proposition and Automotive DOOH Context */}
+        {/* First Fold: Hero with official promotional video, copy & CTAs */}
         <Hero />
 
-        {/* 3-Step Process & Photographic Proof */}
+        {/* SMB Target Audience Segment Badges */}
+        <TargetAudience />
+
+        {/* Benefits Section: 3 cards with grounded, verifiable messaging */}
+        <Benefits />
+
+        {/* How It Works: 3 clean stages */}
         <HowItWorks />
 
-        {/* Flagship Interactive 10" Tablet Simulator */}
-        <TabletSimulator />
+        {/* Interactive 10" Tablet Preview inside car environment */}
+        <TabletInteractivePreview />
 
-        {/* Media Comparison: DOOH vs Social Ads vs Traditional */}
-        <ComparisonSection />
+        {/* Pricing Calculator: Linear rule R$ 200/10s up to 120s with vehicle multiplier */}
+        <PricingCalculator />
 
-        {/* Interactive Reach & ROI Calculator */}
-        <ImpactCalculator />
+        {/* FAQ Accordion with the 7 specific verified questions */}
+        <FaqSection />
 
-        {/* Transparent Pricing Plans */}
-        <PricingPlans />
-
-        {/* Verifiable Testimonials & Case Studies */}
-        <ProofTestimonials />
-
-        {/* Express Campaign Diagnosis Form */}
-        <LeadDiagnosisSection />
-
-        {/* Objection Handling FAQ */}
-        <FAQ />
+        {/* Final Conversion Callout */}
+        <FinalCta />
       </main>
 
-      {/* Quiet Corporate Footer */}
-      <Footer />
+      {/* Footer with official logo, differentiated commercial vs support numbers */}
+      <Footer onOpenTracking={() => setIsTrackingModalOpen(true)} />
 
-      {/* Non-intrusive Floating WhatsApp CTA */}
-      <FloatingWhatsApp />
+      {/* Advertiser Tracking Modal */}
+      <TrackingModal
+        isOpen={isTrackingModalOpen}
+        onClose={() => setIsTrackingModalOpen(false)}
+      />
+
+      {/* Floating Quick WhatsApp Action */}
+      <WhatsAppFloatingButton />
     </div>
   );
 }

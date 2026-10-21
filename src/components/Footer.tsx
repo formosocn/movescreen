@@ -1,117 +1,167 @@
 import React from 'react';
-import { Monitor, MessageCircle, Mail, MapPin, Clock } from 'lucide-react';
-import { WHATSAPP_CONFIG, buildWhatsAppLink } from '../config/whatsapp';
+import { ASSETS, CONTACTS, buildCommercialWhatsAppUrl, buildSupportWhatsAppUrl } from '../config/constants';
+import { trackEvent } from '../utils/analytics';
+import { Search, MessageSquare, Phone, ShieldCheck, Mail } from 'lucide-react';
 
-export const Footer: React.FC = () => {
-  const currentYear = new Date().getFullYear();
-  const directWhatsAppUrl = buildWhatsAppLink({ intent: 'geral' });
+interface FooterProps {
+  onOpenTracking: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onOpenTracking }) => {
+  const handleNavClick = (sectionId: string) => {
+    const el = document.getElementById(sectionId);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
-    <footer className="bg-[#040711] text-slate-400 text-xs border-t border-slate-900 pt-16 pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-800/80">
-          {/* Col 1: Brand & Description */}
-          <div className="md:col-span-5 space-y-4">
-            <div className="flex items-center gap-2.5 text-xl font-bold text-white tracking-tight">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00D2FF] to-blue-600 flex items-center justify-center text-slate-950">
-                <Monitor className="w-4 h-4 text-slate-950" strokeWidth={2.5} />
+    <footer className="border-t border-slate-800 bg-[#050810] text-slate-400">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-12">
+          {/* Brand & Mission Column */}
+          <div className="space-y-4 lg:col-span-5">
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-12 overflow-hidden rounded-xl border border-blue-500/40 bg-slate-900 shadow-sm shadow-blue-500/20">
+                <img
+                  src={ASSETS.logo}
+                  alt="MoveScreen Logo Oficial"
+                  className="h-full w-full object-cover"
+                />
               </div>
-              <span>
-                Move<span className="text-[#00D2FF]">Screen</span>
-              </span>
+              <div>
+                <span className="font-display text-xl font-extrabold text-white">
+                  Move<span className="text-blue-500">Screen</span>
+                </span>
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                  Rede de Mídia Digital DOOH
+                </p>
+              </div>
             </div>
-            <p className="text-slate-400 text-xs sm:text-sm leading-relaxed max-w-sm">
-              Rede de mídia digital DOOH em tablets de 10 polegadas instalados em veículos de transporte por aplicativo. Conectamos marcas locais e passageiros durante suas viagens diárias.
+
+            <p className="text-xs text-slate-300 leading-relaxed max-w-md">
+              A MoveScreen conecta empresas a passageiros de transporte por aplicativo através de tablets de 10 polegadas instalados nos encostos de cabeça, com interação direta via QR Code.
             </p>
-            <div className="flex items-center gap-2 text-emerald-400 font-semibold text-xs pt-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Atendimento comercial ativo via WhatsApp</span>
+
+            <div className="pt-2 flex items-center gap-2 text-xs text-slate-400">
+              <ShieldCheck className="h-4 w-4 text-blue-400" />
+              <span>Transparência comercial e precificação linear proporcional.</span>
             </div>
           </div>
 
-          {/* Col 2: Navigation Links */}
-          <div className="md:col-span-3 space-y-3">
-            <h4 className="text-xs uppercase tracking-wider font-bold text-white">
+          {/* Quick Links Column */}
+          <div className="space-y-3 lg:col-span-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200">
               Navegação
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <a href="#como-funciona" className="hover:text-[#00D2FF] transition-colors">
+                <button
+                  onClick={() => handleNavClick('inicio')}
+                  className="hover:text-blue-400 transition-colors"
+                >
+                  Início
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNavClick('beneficios')}
+                  className="hover:text-blue-400 transition-colors"
+                >
+                  Benefícios do Anúncio
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNavClick('como-funciona')}
+                  className="hover:text-blue-400 transition-colors"
+                >
                   Como Funciona
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#simulador" className="hover:text-[#00D2FF] transition-colors">
-                  Simulador Interativo 10"
-                </a>
+                <button
+                  onClick={() => handleNavClick('precos')}
+                  className="hover:text-blue-400 transition-colors"
+                >
+                  Simulador de Planos & Preços
+                </button>
               </li>
               <li>
-                <a href="#vantagens" className="hover:text-[#00D2FF] transition-colors">
-                  Vantagens do DOOH
-                </a>
-              </li>
-              <li>
-                <a href="#calculadora" className="hover:text-[#00D2FF] transition-colors">
-                  Calculadora de Alcance
-                </a>
-              </li>
-              <li>
-                <a href="#planos" className="hover:text-[#00D2FF] transition-colors">
-                  Planos & Preços
-                </a>
-              </li>
-              <li>
-                <a href="#faq" className="hover:text-[#00D2FF] transition-colors">
+                <button
+                  onClick={() => handleNavClick('faq')}
+                  className="hover:text-blue-400 transition-colors"
+                >
                   Perguntas Frequentes
-                </a>
+                </button>
+              </li>
+              <li className="pt-2">
+                <button
+                  onClick={() => {
+                    trackEvent('click_rastrear_anuncio');
+                    onOpenTracking();
+                  }}
+                  className="inline-flex items-center gap-1.5 text-blue-400 hover:text-blue-300 font-semibold"
+                >
+                  <Search className="h-3.5 w-3.5" />
+                  <span>Área do Anunciante: Rastrear Anúncio</span>
+                </button>
               </li>
             </ul>
           </div>
 
-          {/* Col 3: Direct Commercial Contact */}
-          <div className="md:col-span-4 space-y-3">
-            <h4 className="text-xs uppercase tracking-wider font-bold text-white">
-              Contato Comercial
+          {/* Contacts Column: Differentiating Commercial vs Support */}
+          <div className="space-y-3 lg:col-span-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+              Canais Oficiais de Contato
             </h4>
-            <div className="space-y-2.5 text-xs text-slate-300">
+
+            {/* Commercial Contact */}
+            <div className="rounded-xl border border-blue-500/20 bg-blue-950/20 p-3.5 space-y-1.5">
+              <span className="text-[11px] font-bold uppercase text-blue-400 block">
+                Comercial & Contratação
+              </span>
+              <p className="text-xs text-slate-300">
+                Novos anunciantes, dúvidas sobre planos e orçamentos:
+              </p>
               <a
-                href={directWhatsAppUrl}
+                href={buildCommercialWhatsAppUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2.5 text-emerald-400 hover:text-emerald-300 transition-colors font-semibold"
+                onClick={() => trackEvent('click_whatsapp_comercial', { source: 'footer' })}
+                className="inline-flex items-center gap-2 text-xs font-bold text-white hover:text-blue-300"
               >
-                <MessageCircle className="w-4 h-4" />
-                <span>WhatsApp: {WHATSAPP_CONFIG.displayPhone}</span>
+                <MessageSquare className="h-4 w-4 text-emerald-400" />
+                <span>WhatsApp: {CONTACTS.commercialPhoneFormatted}</span>
               </a>
+            </div>
 
-              <div className="flex items-center gap-2.5 text-slate-400">
-                <Mail className="w-4 h-4 text-[#00D2FF]" />
-                <span>{WHATSAPP_CONFIG.contactEmail}</span>
-              </div>
-
-              <div className="flex items-center gap-2.5 text-slate-400">
-                <Clock className="w-4 h-4 text-[#00D2FF]" />
-                <span>{WHATSAPP_CONFIG.businessHours}</span>
-              </div>
-
-              <div className="flex items-center gap-2.5 text-slate-400">
-                <MapPin className="w-4 h-4 text-[#00D2FF]" />
-                <span>Atuação em capitais e polos metropolitanos</span>
-              </div>
+            {/* Support Contact */}
+            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-3.5 space-y-1.5">
+              <span className="text-[11px] font-bold uppercase text-slate-300 block">
+                Atendimento ao Anunciante
+              </span>
+              <p className="text-xs text-slate-400">
+                Suporte para campanhas ativas, envio de artes e auditoria:
+              </p>
+              <a
+                href={buildSupportWhatsAppUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackEvent('click_whatsapp_atendimento', { source: 'footer' })}
+                className="inline-flex items-center gap-2 text-xs font-semibold text-slate-200 hover:text-white"
+              >
+                <Phone className="h-3.5 w-3.5 text-sky-400" />
+                <span>WhatsApp: {CONTACTS.supportPhoneFormatted}</span>
+              </a>
             </div>
           </div>
         </div>
 
-        {/* Bottom copyright & legal notes */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
-          <div>
-            © {currentYear} MoveScreen Mídia Digital DOOH. Todos os direitos reservados.
-          </div>
-          <div className="flex items-center gap-6">
-            <a href="/privacidade/" className="hover:text-[#00D2FF] transition-colors">Privacidade & LGPD</a>
-            <span>Termos de Veiculação</span>
-            <span>Mídia Kit Corporativo</span>
-          </div>
+        {/* Bottom Bar: Legal & Disclaimer */}
+        <div className="mt-10 border-t border-slate-800/80 pt-6 text-center sm:flex sm:items-center sm:justify-between text-xs text-slate-500">
+          <p>© {new Date().getFullYear()} MoveScreen Mídia Digital. Todos os direitos reservados.</p>
+          <p className="mt-2 sm:mt-0 text-[11px]">
+            Valores sujeitos às condições de veiculação e disponibilidade de frota por região.
+          </p>
         </div>
       </div>
     </footer>

@@ -1,6 +1,6 @@
 {
-  "name": "MoveScreen - Mídia DOOH em Carros de Aplicativo",
-  "description": "Anuncie sua empresa em tablets horizontais de 10 polegadas no encosto de cabeça de carros de aplicativo (Uber e 99). Zero dispersão, alta retenção e captação de clientes locais.",
+  "name": "MoveScreen - Mídia Digital em Carros de Aplicativo",
+  "description": "Landing page de alta conversão para a MoveScreen, rede de mídia digital DOOH em tablets de carros de aplicativo.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
