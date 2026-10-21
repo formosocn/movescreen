@@ -108,7 +108,7 @@ export const Footer: React.FC = () => {
             © {currentYear} MoveScreen Mídia Digital DOOH. Todos os direitos reservados.
           </div>
           <div className="flex items-center gap-6">
-            <span>Privacidade & LGPD</span>
+            <a href="/privacidade/" className="hover:text-[#00D2FF] transition-colors">Privacidade & LGPD</a>
             <span>Termos de Veiculação</span>
             <span>Mídia Kit Corporativo</span>
           </div>

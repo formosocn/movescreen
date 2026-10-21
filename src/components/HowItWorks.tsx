@@ -1,9 +1,9 @@
 import React from 'react';
 import { Palette, Navigation, QrCode, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { buildWhatsAppLink } from '../config/whatsapp';
+import PASSENGER_IMG from '../assets/images/movescreen_passenger_view_1792504810580.jpg';
+import FLEET_IMG from '../assets/images/movescreen_driver_car_fleet_1792504810222.jpg';
 
-const PASSENGER_IMG = '/src/assets/images/movescreen_passenger_view_1792504810580.jpg';
-const FLEET_IMG = '/src/assets/images/movescreen_driver_car_fleet_1792504810222.jpg';
 
 export const HowItWorks: React.FC = () => {
   const whatsAppUrl = buildWhatsAppLink({ intent: 'geral', customDetails: 'Origem: Como Funciona' });
