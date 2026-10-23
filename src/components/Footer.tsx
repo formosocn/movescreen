@@ -157,4 +157,19 @@ export const Footer: React.FC<FooterProps> = ({ onOpenTracking }) => {
         </div>
 
         {/* Bottom Bar: Legal & Disclaimer */}
-        <div className="mt-10 border-t border-slate-800/80
+        <div className="mt-10 border-t border-slate-800/80 pt-6 text-center sm:flex sm:items-center sm:justify-between text-xs text-slate-500">
+          <p>© {new Date().getFullYear()} MoveScreen Mídia Digital. Todos os direitos reservados.</p>
+          <a
+            href="/privacidade/"
+            className="mt-2 inline-block sm:mt-0 hover:text-blue-400 transition-colors underline underline-offset-2"
+          >
+            Privacidade &amp; LGPD
+          </a>
+          <p className="mt-2 sm:mt-0 text-[11px]">
+            Valores sujeitos às condições de veiculação e disponibilidade de frota por região.
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+};
