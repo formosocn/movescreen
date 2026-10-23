@@ -3,7 +3,7 @@
  * Mídia Digital DOOH em Tablets Horizontais em Carros de Aplicativo
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { TargetAudience } from './components/TargetAudience';
@@ -14,16 +14,18 @@ import { PricingCalculator } from './components/PricingCalculator';
 import { FaqSection } from './components/FaqSection';
 import { FinalCta } from './components/FinalCta';
 import { Footer } from './components/Footer';
-import { TrackingModal } from './components/TrackingModal';
 import { WhatsAppFloatingButton } from './components/WhatsAppFloatingButton';
 
 export default function App() {
-  const [isTrackingModalOpen, setIsTrackingModalOpen] = useState(false);
+  // Rastrear leva ao sistema de rastreamento publicado em /tracker
+  const goToTracker = () => {
+    window.location.assign('/tracker/');
+  };
 
   return (
     <div className="min-h-screen bg-[#070b14] text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
       {/* Header with official logo, navigation, tracking trigger and primary CTA */}
-      <Header onOpenTracking={() => setIsTrackingModalOpen(true)} />
+      <Header onOpenTracking={goToTracker} />
 
       {/* Main Landing Page Content */}
       <main className="flex-grow">
@@ -53,13 +55,7 @@ export default function App() {
       </main>
 
       {/* Footer with official logo, differentiated commercial vs support numbers */}
-      <Footer onOpenTracking={() => setIsTrackingModalOpen(true)} />
-
-      {/* Advertiser Tracking Modal */}
-      <TrackingModal
-        isOpen={isTrackingModalOpen}
-        onClose={() => setIsTrackingModalOpen(false)}
-      />
+      <Footer onOpenTracking={goToTracker} />
 
       {/* Floating Quick WhatsApp Action */}
       <WhatsAppFloatingButton />
