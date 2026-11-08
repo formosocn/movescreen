@@ -333,7 +333,7 @@
       let totalExibidos = 0;
       let todosPontosBounds = [];
       
-      // Set de deduplicação global para garantir que registros idênticos não sejam duplicados/triplicados na tabela
+      // Set de deduplicação global
       const chavesExibidasGlobal = new Set();
 
       let dtInicio = dataInicio ? new Date(dataInicio) : null;
@@ -392,10 +392,10 @@
         pontos.forEach((p, idx) => {
           const lat = parseFloat(p.latitude);
           const lng = parseFloat(p.longitude);
-          const dataISO = new Date(p.recorded_at).toISOString();
 
-          // DEDUPLICAÇÃO ESTRITA: Data ISO + Latitude/Longitude arredondadas (5 casas)
-          const chaveUnica = dataISO + '_' + lat.toFixed(5) + '_' + lng.toFixed(5);
+          // DEDUPLICAÇÃO: pino + segundo cheio (ignora ms) + lat/lng (5 casas)
+          const segundo = Math.floor(new Date(p.recorded_at).getTime() / 1000);
+          const chaveUnica = (dev.pino_identificador || '') + '_' + segundo + '_' + lat.toFixed(5) + '_' + lng.toFixed(5);
 
           if (chavesExibidasGlobal.has(chaveUnica)) return;
           chavesExibidasGlobal.add(chaveUnica);
